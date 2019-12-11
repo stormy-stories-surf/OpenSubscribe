@@ -1,0 +1,19 @@
+Hurra! You subscribed to our blog.
+Very soon you will automatically receive a mail, when we publish a new post.
+
+But first please confirm your subscription by clicking the below link.
+
+Click here to subscribe! : https://yourURL.com/ConfirmSubscribtion.php?data=XXXXX
+
+Thanks a lot for your interest, your stormy-stories team!
+
+-------------------------------------------------------
+
+Hurra! Du hast dich auf unserer Website angemeldet.
+Schon bald wirst du automatisch per Mail über unsere neuen Beiträge benachrichtigt.
+
+Aber vorher bestätige bitte noch einmal dein Abonnement indem du den Link unten anklickst:
+
+Hier klicken, um das Abonnement zu bestätigen :  https://yourURL.com/ConfirmSubscribtion.php?data=XXXXX
+
+Vielen Dank für dein Interesse, dein stormy-stories Team!
