@@ -64,3 +64,24 @@ class OpenSubscribe:
 
 	def getMailAddressesWithoutConfirmation(self):
         print("TO BE CONTINUED")
+
+        import mysql.connector
+
+        mydb = mysql.connector.connect(
+            host="localhost",
+            user="SendMailsUser",
+            passwd="<PUT_YOUR_PASSWORD_HERE>",
+            database="OpenSubscribe"
+        )
+
+        mycursor = mydb.cursor()
+
+        mycursor.execute("SELECT mailaddress, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
+
+        myresult = mycursor.fetchall()
+
+        for x in myresult:
+            mailaddress=x[0]
+            subscribeID=x[1]
+            print("Mail : " + mailaddress)
+            print("SubscribeID : " + subscribeID)
