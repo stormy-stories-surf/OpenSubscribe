@@ -1,6 +1,8 @@
 # OpenSubscribe
 A python and php implementation of a tooling for handling E-Mail subscribtions / newsletters on your website.
 
+**PROJECT STATUS : IN DEVELOPMENT**
+<img src="docs/pictures/UnderConstructionIcon.png" width="20%">
 ## Setup
 Replace `https://yourURL.com` with your website URL in
  - `mail-templates/confirmSubscribtion.html`
