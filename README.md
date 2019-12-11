@@ -9,3 +9,4 @@ Replace `https://yourURL.com` with your website URL in
 Replace `<PUT_YOUR_PASSWORD_HERE>` with your password in
  - `php/ConfirmSubscribtion.php`
  - `php/SubscribtionForm.php`
+ - `python/OpenSubscribe.py`
