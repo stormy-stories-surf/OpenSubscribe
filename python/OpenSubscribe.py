@@ -70,7 +70,7 @@ class OpenSubscribe:
         mydb = mysql.connector.connect(
             host="localhost",
             user="SendMailsUser",
-            passwd="<PUT_YOUR_PASSWORD_HERE>",
+            passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
             database="OpenSubscribe"
         )
 

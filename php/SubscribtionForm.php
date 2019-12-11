@@ -45,24 +45,24 @@ function cleanupStringFromSpecialCharacters($string_p) {
 }
 
 function insert_new_subscriber($mailAddress_p) {
-        // open database connection
-	$pdo_l = new PDO('mysql:host=localhost;dbname=OpenSubscribe', 'SubscribtionFormUser', '<PUT_YOUR_PASSWORD_HERE>');
+  // open database connection
+	$pdo_l = new PDO('mysql:host=localhost;dbname=OpenSubscribe', 'SubscribtionFormUser', '<PUT_YOUR_SUBSCRIBTION_FORM_USER_PASSWORD_HERE>');
 
 	// prepare and execute insert
-        $cryptoStrong_l = True;
-        $subscribeID_l = openssl_random_pseudo_bytes(64,$cryptoStrong_l);
-       	$unsubscribeID_l = openssl_random_pseudo_bytes(64,$cryptoStrong_l);
-        $subscribeID_l = bin2hex($subscribeID_l);
-       	$unsubscribeID_l = bin2hex($unsubscribeID_l);
+  $cryptoStrong_l = True;
+  $subscribeID_l = openssl_random_pseudo_bytes(64,$cryptoStrong_l);
+  $unsubscribeID_l = openssl_random_pseudo_bytes(64,$cryptoStrong_l);
+  $subscribeID_l = bin2hex($subscribeID_l);
+  $unsubscribeID_l = bin2hex($unsubscribeID_l);
 	$statement = $pdo_l->prepare("INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed) VALUES (NULL, ?, ?, ?, false, false)");
 	$statement->execute(array($mailAddress_p, $subscribeID_l, $unsubscribeID_l));
-        echo "Inserted new subscriber " . $mailAddress_p . " with subscribeID : " . $subscribeID_l . " and with unsubscribeID : " . $unsubscribeID_l . "<br />";
+  echo "Inserted new subscriber " . $mailAddress_p . " with subscribeID : " . $subscribeID_l . " and with unsubscribeID : " . $unsubscribeID_l . "<br />";
 
 }
 
 function select_all_subscribers() {
-        // open database connection
-	$pdo_l = new PDO('mysql:host=localhost;dbname=OpenSubscribe', 'SubscribtionFormUser', '<PUT_YOUR_PASSWORD_HERE>');
+  // open database connection
+	$pdo_l = new PDO('mysql:host=localhost;dbname=OpenSubscribe', 'SubscribtionFormUser', '<PUT_YOUR_SUBSCRIBTION_FORM_USER_PASSWORD_HERE>');
 
 	// select and print all from subscriber table
 	$sql_l = "SELECT * FROM subscriber";
@@ -77,21 +77,21 @@ function select_all_subscribers() {
 }
 
 function check_time_since_last_request_okay() {
-        // open database connection
-	$pdo_l = new PDO('mysql:host=localhost;dbname=OpenSubscribe', 'SubscribtionFormUser', '<PUT_YOUR_PASSWORD_HERE>');
+  // open database connection
+	$pdo_l = new PDO('mysql:host=localhost;dbname=OpenSubscribe', 'SubscribtionFormUser', '<PUT_YOUR_SUBSCRIBTION_FORM_USER_PASSWORD_HERE>');
 
-        // get last subscribtion time
+  // get last subscribtion time
 	$timeOfLastSubscribtionAsString_l = "1970-01-01 01:01:01";
-        $sql_l = "SELECT * FROM lastSubscribtion";
+  $sql_l = "SELECT * FROM lastSubscribtion";
 
-        foreach ($pdo_l->query($sql_l) as $row_l) {
-                $timeOfLastSubscribtionAsString_l = $row_l['timeOfLastSubscribtion'];
+  foreach ($pdo_l->query($sql_l) as $row_l) {
+    $timeOfLastSubscribtionAsString_l = $row_l['timeOfLastSubscribtion'];
 	}
 
-        $timeOfLastSubscribtion = new DateTime($timeOfLastSubscribtionAsString_l, new DateTimeZone('UTC'));
+  $timeOfLastSubscribtion = new DateTime($timeOfLastSubscribtionAsString_l, new DateTimeZone('UTC'));
 
 	// get current time
-        $now = new DateTime($now, new DateTimeZone('UTC'));
+  $now = new DateTime($now, new DateTimeZone('UTC'));
 
 	echo "<br />";
 	echo "check if time since last request is > 5 seconds <br />";
@@ -100,7 +100,7 @@ function check_time_since_last_request_okay() {
 
 	// get difference in seconds
 	$diffInSeconds = $now->getTimestamp() - $timeOfLastSubscribtion->getTimestamp();
-        echo "difference is " . $diffInSeconds . " seconds <br /> <br />";
+  echo "difference is " . $diffInSeconds . " seconds <br /> <br />";
 
 	// check if timestamp of last request is more 5 seconds before the timestamp of current request
 	if ($diffInSeconds < 5) {

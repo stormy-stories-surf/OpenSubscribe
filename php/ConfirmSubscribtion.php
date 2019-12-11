@@ -23,7 +23,7 @@ function interpolateQuery($query, $params) {
 
 function update_subscribtion_confirmed($subscribeID_l) {
         // open database connection
-	$pdo_l = new PDO('mysql:host=localhost;dbname=OpenSubscribe', 'SubscribtionFormUser', '<PUT_YOUR_PASSWORD_HERE>');
+	$pdo_l = new PDO('mysql:host=localhost;dbname=OpenSubscribe', 'ConfirmSubscribtionUser', '<PUT_YOUR_CONFIRM_SUBSCRIBTION_USER_PASSWORD_HERE>');
 
 	// prepare and execute insert
 	//$statement = $pdo_l->prepare("UPDATE subscriber SET subscribtionConfirmed = true WHERE subscribeID = '?'");

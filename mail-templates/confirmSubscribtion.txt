@@ -3,7 +3,7 @@ Very soon you will automatically receive a mail, when we publish a new post.
 
 But first please confirm your subscription by clicking the below link.
 
-Click here to subscribe! : https://yourURL.com/ConfirmSubscribtion.php?data=XXXXX
+Click here to subscribe! : <PUT_YOUR_URL_HERE>/ConfirmSubscribtion.php?data=XXXXX
 
 Thanks a lot for your interest, your stormy-stories team!
 
@@ -14,6 +14,6 @@ Schon bald wirst du automatisch per Mail über unsere neuen Beiträge benachrich
 
 Aber vorher bestätige bitte noch einmal dein Abonnement indem du den Link unten anklickst:
 
-Hier klicken, um das Abonnement zu bestätigen :  https://yourURL.com/ConfirmSubscribtion.php?data=XXXXX
+Hier klicken, um das Abonnement zu bestätigen : <PUT_YOUR_URL_HERE>/ConfirmSubscribtion.php?data=XXXXX
 
 Vielen Dank für dein Interesse, dein stormy-stories Team!
