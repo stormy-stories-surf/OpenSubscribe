@@ -2,7 +2,7 @@
 A python and php implementation of a tooling for handling E-Mail subscribtions / newsletters on your website.
 
 **PROJECT STATUS : IN DEVELOPMENT**
-
+<br />
 <img src="docs/pictures/UnderConstructionIcon.png" width="15%">
 ## Setup
 Replace `https://yourURL.com` with your website URL in
