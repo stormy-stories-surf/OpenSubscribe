@@ -1,4 +1,6 @@
+#!/usr/bin/env python3
 import argparse
+import fileinput
 import smtplib
 import ssl
 from email.mime.text import MIMEText
@@ -18,21 +20,9 @@ class OpenSubscribe:
                             "<PUT_YOUR_URL_HERE>", "https://stormy-stories.surf")
 
     def replaceStringInFile(self, filename, old_string, new_string):
-        # Safely read the input filename using 'with'
-        with open(filename, 'r+') as f:
-            s = f.read()
-            if old_string not in s:
-                print('"{old_string}" not found in {filename}.'.format(**locals()))
-                return
-
-        # Safely write the changed content, if found in the file
-        #with open(filename, 'w') as f:
-        #    s2 = f.read()
-        #    print(
-        #        'Changing "{old_string}" to "{new_string}" in {filename}'.format(**locals()))
-            s = s.replace(old_string, new_string)
-            print(s)
-            f.write(s)
+        with fileinput.FileInput(filename, inplace=True) as file:
+            for line in file:
+                print(line.replace(old_string, new_string), end='')
 
     def smtpLogin(self):
         # Create a secure SSL context
