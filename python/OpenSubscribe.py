@@ -127,7 +127,6 @@ class OpenSubscribe:
 
 
     def getMailAddressesWithoutConfirmation(self):
-        return [["test@web.de", "asdfasdfasdf"], ["test2@web.de", "asdfasdfasdf"]]
         mydb = mysql.connector.connect(
             host="localhost",
             user="SendMailsUser",
