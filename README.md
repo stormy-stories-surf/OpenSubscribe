@@ -7,6 +7,11 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 
 ## Setup
 
+### Install dependencies
+pip3 install mysql-connector-python
+
+### Fill config.json
+
 Replace `<PUT_YOUR_URL_HERE>` with your website URL in
  - `mail-templates/confirmSubscribtion.html`
  - `mail-templates/confirmSubscribtion.txt`

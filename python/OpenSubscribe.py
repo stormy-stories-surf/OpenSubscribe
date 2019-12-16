@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 import argparse
+import time
 import fileinput
 import smtplib
 import ssl
+import json
+import mysql.connector
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-
 
 class OpenSubscribe:
     def __init__(self, smtpServer_, port_, smtpUser_, smtpPassword_):
@@ -14,10 +16,20 @@ class OpenSubscribe:
         self.sender_email = smtpUser_
         self.password = smtpPassword_
 
-    def setup(self, configFileName_ = "mail-templates/confirmSubscribtion.html"):
+    def setup(self, configFileName_ = "config/config.json"):
+        with open(configFileName_) as json_file:
+            data = json.load(json_file)
+            print(data)
+            urlWebsite = data["URL_WEBSITE"]
+            smtpServer = data["SMTP_SERVER"]
+            smtpPort = data["SMTP_PORT"]
+            smtpSenderMailAddress = data["SMTP_SENDER_MAIL_ADDRESS"]
+            smtpSenderPassword = data["SMTP_SENDER_PASSWORD"]
+
         print("Im in setup function")
-        self.replaceStringInFile(configFileName_,
-                            "<PUT_YOUR_URL_HERE>", "https://stormy-stories.surf")
+
+        for filename in ["mail-templates/confirmSubscribtion.html", "mail-templates/confirmSubscribtion.txt"]:
+            self.replaceStringInFile(filename, "<PUT_YOUR_URL_HERE>", urlWebsite)
 
     def replaceStringInFile(self, filename, old_string, new_string):
         with fileinput.FileInput(filename, inplace=True) as file:
@@ -40,7 +52,13 @@ class OpenSubscribe:
             # Print any error messages to stdout
             print(e)
 
-    def sendConfirmSubscribtionMail(self, receipient_, subscribtionID_):
+    def sendConfirmSubscribtionMail(self, receipientData_):
+        mailaddress = receipientData_[0]
+        subscribeID = receipientData_[1]
+        print("Mail : " + mailaddress)
+        print("SubscribeID : " + subscribeID)
+        return ""
+
         try:
             receipientsList = [receipient_]
             receipients = ", ".join(receipientsList)
@@ -79,11 +97,17 @@ class OpenSubscribe:
     def smtpClose(self):
         self.server.quit()
 
+    def confirmDeamon(self):
+        while (True):
+            mailAddresses = self.getMailAddressesWithoutConfirmation()
+            for mailAddress in mailAddresses:
+                self.sendConfirmSubscribtionMail(mailAddress)
+
+            time.sleep(1)
+
+
     def getMailAddressesWithoutConfirmation(self):
-        print("TO BE CONTINUED")
-
-        import mysql.connector
-
+        return [["test@web.de", "asdfasdfasdf"], ["test2@web.de", "asdfasdfasdf"]]
         mydb = mysql.connector.connect(
             host="localhost",
             user="SendMailsUser",
@@ -92,23 +116,23 @@ class OpenSubscribe:
         )
 
         mycursor = mydb.cursor()
-
-        mycursor.execute(
-            "SELECT mailaddress, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
-
+        mycursor.execute( "SELECT mailaddress, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
         myresult = mycursor.fetchall()
 
-        for x in myresult:
-            mailaddress = x[0]
-            subscribeID = x[1]
-            print("Mail : " + mailaddress)
-            print("SubscribeID : " + subscribeID)
+        return myresult
 
     def parseArgs(self):
         parser = argparse.ArgumentParser()
         parser.add_argument(
             '--setup', action='store_true',
              help='Setup OpenSubscribe with options set in config.json')
+
+        parser.add_argument(
+            '--confirmD', action='store_true',
+             help='Runs the confirm-subscribtion-mails daemon, which as a ' +
+                  'never ending service checks the database for new subscribtions' +
+                  'and sends a confirm-subscribtion mail for every new subscribtion')
+
         args = parser.parse_args()
         return args
 
@@ -117,6 +141,8 @@ def main():
     args = s.parseArgs()
     if args.setup:
         s.setup()
+    if args.confirmD:
+        s.confirmDeamon()
 
 if __name__ == '__main__':
     main()
