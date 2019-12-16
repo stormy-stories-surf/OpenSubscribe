@@ -28,8 +28,18 @@ class OpenSubscribe:
 
         print("Im in setup function")
 
-        for filename in ["mail-templates/confirmSubscribtion.html", "mail-templates/confirmSubscribtion.txt"]:
+        for filename in ["mail-templates/confirmSubscribtion.html",
+                         "mail-templates/confirmSubscribtion.txt",
+                         "php/ConfirmSubscribtion.php",
+                         "php/SubscribtionForm.php",
+                         "python/OpenSubscribe.py",
+                         ]:
             self.replaceStringInFile(filename, "<PUT_YOUR_URL_HERE>", urlWebsite)
+            self.replaceStringInFile(filename, "<PUT_YOUR_SMTP_SERVER_HERE>", smtpServer)
+            self.replaceStringInFile(filename, "<PUT_YOUR_SMTP_PORT_HERE>", smtpPort)
+            self.replaceStringInFile(filename, "PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>", smtpSenderMailAddress)
+            self.replaceStringInFile(filename, "PUT_YOUR_SENDER_PASSWORD_HERE>", smtpSenderPassword)
+
 
     def replaceStringInFile(self, filename, old_string, new_string):
         with fileinput.FileInput(filename, inplace=True) as file:
