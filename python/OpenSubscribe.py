@@ -10,11 +10,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 class OpenSubscribe:
-    def __init__(self, smtpServer_, port_, smtpUser_, smtpPassword_):
-        self.smtp_server = smtpServer_
-        self.port = port_  # For starttls
-        self.sender_email = smtpUser_
-        self.password = smtpPassword_
+    def __init__(self):
+        print("")
 
     def setup(self, configFileName_ = "config/config.json"):
         with open(configFileName_) as json_file:
@@ -147,10 +144,10 @@ class OpenSubscribe:
         return args
 
 def main():
-    s = OpenSubscribe("<PUT_YOUR_SMTP_SERVER_HERE>", "<PUT_YOUR_SMTP_PORT_HERE>" , "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>", "<PUT_YOUR_SENDER_PASSWORD_HERE>")
+    s = OpenSubscribe()
     args = s.parseArgs()
     if args.setup:
-        s.setup()
+        s.setup("config/config_stormy_stories.json")
     if args.confirmD:
         s.confirmDeamon()
 
