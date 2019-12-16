@@ -22,6 +22,15 @@ class OpenSubscribe:
             smtpPort = data["SMTP_PORT"]
             smtpSenderMailAddress = data["SMTP_SENDER_MAIL_ADDRESS"]
             smtpSenderPassword = data["SMTP_SENDER_PASSWORD"]
+            confirmSubscribtion = data["CONFIRM_SUBSCRIBTION"]
+            confirmSubscribtionSqlUser = confirmSubscribtion["SQL_USER"]
+            confirmSubscribtionSqlPW = confirmSubscribtion["SQL_PASSWORD"]
+            subscribtionForm = data["SUBSCRIBTION_FORM"]
+            subscribtionFormSqlUser = subscribtionForm["SQL_USER"]
+            subscribtionFormSqlPW = subscribtionForm["SQL_PASSWORD"]
+            sendConfirmSubscribtionMails = data["SEND_CONFIRM_SUBSCRIBTION_MAILS"]
+            sendConfirmSubscribtionMailsSqlUser = sendConfirmSubscribtionMails["SQL_USER"]
+            sendConfirmSubscribtionMailsSqlPW = sendConfirmSubscribtionMails["SQL_PASSWORD"]
 
         print("Im in setup function")
 
@@ -34,8 +43,9 @@ class OpenSubscribe:
             self.replaceStringInFile(filename, "<PUT_YOUR_URL_HERE>", urlWebsite)
             self.replaceStringInFile(filename, "<PUT_YOUR_SMTP_SERVER_HERE>", smtpServer)
             self.replaceStringInFile(filename, "<PUT_YOUR_SMTP_PORT_HERE>", smtpPort)
-            self.replaceStringInFile(filename, "PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>", smtpSenderMailAddress)
-            self.replaceStringInFile(filename, "PUT_YOUR_SENDER_PASSWORD_HERE>", smtpSenderPassword)
+            self.replaceStringInFile(filename, "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>", smtpSenderMailAddress)
+            self.replaceStringInFile(filename, "<PUT_YOUR_SENDER_PASSWORD_HERE>", smtpSenderPassword)
+            self.replaceStringInFile(filename, "<PUT_YOUR_CONFIRM_SUBSCRIBTION_USER_PASSWORD_HERE>" confirmSubscribtionSqlPW)
 
 
     def replaceStringInFile(self, filename, old_string, new_string):
