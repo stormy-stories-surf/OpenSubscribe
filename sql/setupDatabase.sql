@@ -1,7 +1,8 @@
 
 /* create and set database */
+DROP DATABASE IF EXISTS OpenSubscribe;
 CREATE DATABASE OpenSubscribe;
-USE DATABASE OpenSubscribe;
+USE OpenSubscribe;
 
 /* table which stores the subscriber data */
 DROP TABLE subscriber;
@@ -25,6 +26,10 @@ CREATE TABLE lastSubscribtion (
 );
 
 /* CREATE USERS */
+DROP USER IF EXISTS 'ConfirmSubscribtionUser'@'localhost'
+DROP USER IF EXISTS 'SubscribtionFormUser'@'localhost'
+DROP USER IF EXISTS 'SendMailsUser'@'localhost'
+
 CREATE USER 'ConfirmSubscribtionUser'@'localhost' IDENTIFIED BY '<PUT_YOUR_CONFIRM_SUBSCRIBTION_USER_PASSWORD_HERE>';
 CREATE USER 'SubscribtionFormUser'@'localhost' IDENTIFIED BY '<PUT_YOUR_SUBSCRIBTION_FORM_USER_PASSWORD_HERE>';
 CREATE USER 'SendMailsUser'@'localhost' IDENTIFIED BY '<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>';
