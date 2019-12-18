@@ -39,6 +39,7 @@ class OpenSubscribe:
                          "php/ConfirmSubscribtion.php",
                          "php/SubscribtionForm.php",
                          "python/OpenSubscribe.py",
+                         "sql/setupDatabase.sql"
                          ]:
             self.replaceStringInFile(filename, "<PUT_YOUR_URL_HERE>", urlWebsite)
             self.replaceStringInFile(filename, "<PUT_YOUR_SMTP_SERVER_HERE>", smtpServer)
