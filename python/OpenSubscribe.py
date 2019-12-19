@@ -132,18 +132,51 @@ class OpenSubscribe:
 
 
     def getMailAddressesWithoutConfirmation(self):
-        mydb = mysql.connector.connect(
-            host="localhost",
-            user="SendMailsUser",
-            passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-            database="OpenSubscribe"
-        )
+        myresult = ""
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
 
-        mycursor = mydb.cursor()
-        mycursor.execute( "SELECT mailaddress, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
-        myresult = mycursor.fetchall()
+            mycursor = mydb.cursor()
+            mycursor.execute( "SELECT mailaddress, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
+            myresult = mycursor.fetchall()
+            
+        except Error as error:
+            print(error)
 
-        return myresult
+        finally:
+            mycursor.close()
+            mydb.close()
+            return myresult
+
+    def updateConfirmationMailSent(self,subscriberID_):
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
+
+            mycursor = mydb.cursor()
+            mycursor.execute( "UPDATE subscriber SET confirmationMailSent = 1 WHERE id = %1")
+            data = (subscriberID_)
+            mycursor.execute(query, data)
+
+            # accept the changes
+            mydb.commit()
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mycursor.close()
+            mydb.close()
+
 
     def parseArgs(self):
         parser = argparse.ArgumentParser()
@@ -162,6 +195,7 @@ class OpenSubscribe:
 
 def main():
     s = OpenSubscribe()
+    s.updateConfirmationMailSent()
     args = s.parseArgs()
     if args.setup:
         s.setup("config/config_stormy_stories.json")
