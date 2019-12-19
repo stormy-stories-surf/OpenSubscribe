@@ -92,11 +92,11 @@ class OpenSubscribe:
             # Create the plain-text and HTML version of your message
             with open("mail-templates/confirmSubscribtion.txt", 'r') as file:
                 text = file.read()
-                text = text.replace("XXXXX", subscribtionID_)
+                text = text.replace("XXXXX", subscribtionID)
 
             with open("mail-templates/confirmSubscribtion.html", 'r') as file:
                 html = file.read()
-                html = html.replace("XXXXX", subscribtionID_)
+                html = html.replace("XXXXX", subscribtionID)
 
             # Turn these into plain/html MIMEText objects
             part1 = MIMEText(text, "plain")
