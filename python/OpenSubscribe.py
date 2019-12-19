@@ -11,8 +11,8 @@ from email.mime.multipart import MIMEMultipart
 
 class OpenSubscribe:
     def __init__(self):
-        self.sender_email = "PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
-        self.sender_password = "PUT_YOUR_SENDER_PASSWORD_HERE>"
+        self.sender_email = "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
+        self.sender_password = "<PUT_YOUR_SENDER_PASSWORD_HERE>"
         self.smtp_server = "<PUT_YOUR_SMTP_SERVER_HERE>"
         self.smtp_port = "<PUT_YOUR_SMTP_PORT_HERE>"
 
