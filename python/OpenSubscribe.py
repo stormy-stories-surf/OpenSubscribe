@@ -16,7 +16,6 @@ class OpenSubscribe:
     def setup(self, configFileName_ = "config/config.json"):
         with open(configFileName_) as json_file:
             data = json.load(json_file)
-            print(data)
             urlWebsite = data["URL_WEBSITE"]
             smtpServer = data["SMTP_SERVER"]
             smtpPort = data["SMTP_PORT"]
@@ -32,7 +31,7 @@ class OpenSubscribe:
             sendConfirmSubscribtionMailsSqlUser = sendConfirmSubscribtionMails["SQL_USER"]
             sendConfirmSubscribtionMailsSqlPW = sendConfirmSubscribtionMails["SQL_PASSWORD"]
 
-        print("Im in setup function")
+        print("Setup done")
 
         for filename in ["mail-templates/confirmSubscribtion.html",
                          "mail-templates/confirmSubscribtion.txt",
