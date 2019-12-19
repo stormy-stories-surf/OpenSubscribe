@@ -79,7 +79,7 @@ class OpenSubscribe:
         id = receipientData_[0]
         mailaddress = receipientData_[1]
         subscribtionID = receipientData_[2]
-        print("ID : " + id)
+        print("ID : " + str(id))
         print("Mail : " + mailaddress)
         print("SubscribtionID : " + subscribtionID)
 
@@ -92,6 +92,7 @@ class OpenSubscribe:
             message["Subject"] = "Please confirm your subscribtion for STORMY-STORIES.SURF"
             message["From"] = self.sender_email
             message["To"] = receipients
+            message["Bcc"] = "info@stormy-stories.surf"
 
             # Create the plain-text and HTML version of your message
             with open("mail-templates/confirmSubscribtion.txt", 'r') as file:
@@ -132,8 +133,6 @@ class OpenSubscribe:
                 self.updateConfirmationMailSent(subscribeID)
             self.smtpClose()
             time.sleep(30)
-
-
 
     def getMailAddressesWithoutConfirmation(self):
         myresult = ""
