@@ -76,8 +76,10 @@ class OpenSubscribe:
             print(e)
 
     def sendConfirmSubscribtionMail(self, receipientData_):
-        mailaddress = receipientData_[0]
-        subscribtionID = receipientData_[1]
+        id = receipientData_[0]
+        mailaddress = receipientData_[1]
+        subscribtionID = receipientData_[2]
+        print("ID : " + id)
         print("Mail : " + mailaddress)
         print("SubscribtionID : " + subscribtionID)
 
@@ -126,6 +128,8 @@ class OpenSubscribe:
             mailAddresses = self.getMailAddressesWithoutConfirmation()
             for mailAddress in mailAddresses:
                 self.sendConfirmSubscribtionMail(mailAddress)
+                subscribeID = mailAddress[0]
+                self.updateConfirmationMailSent(subscribeID)
             self.smtpClose()
             time.sleep(30)
 
@@ -142,7 +146,7 @@ class OpenSubscribe:
             )
 
             mycursor = mydb.cursor()
-            mycursor.execute( "SELECT mailaddress, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
+            mycursor.execute( "SELECT id, mailaddress, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
             myresult = mycursor.fetchall()
 
         except Error as error:
@@ -198,8 +202,7 @@ def main():
     if args.setup:
         s.setup("config/config_stormy_stories.json")
     if args.confirmD:
-        s.updateConfirmationMailSent("1")
-        #s.confirmDeamon()
+        s.confirmDeamon()
 
 if __name__ == '__main__':
     main()
