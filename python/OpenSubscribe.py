@@ -11,8 +11,8 @@ from email.mime.multipart import MIMEMultipart
 
 class OpenSubscribe:
     def __init__(self):
-        self.sender_email="SMTP_SENDER_MAIL_ADDRESS"
-        self.sender_password="SMTP_SENDER_PASSWORD"
+        self.sender_email="PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
+        self.sender_password="PUT_YOUR_SENDER_PASSWORD_HERE>"
 
     def setup(self, configFileName_ = "config/config.json"):
         with open(configFileName_) as json_file:
