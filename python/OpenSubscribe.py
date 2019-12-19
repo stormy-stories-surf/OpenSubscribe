@@ -144,7 +144,7 @@ class OpenSubscribe:
             mycursor = mydb.cursor()
             mycursor.execute( "SELECT mailaddress, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
             myresult = mycursor.fetchall()
-            
+
         except Error as error:
             print(error)
 
@@ -195,12 +195,12 @@ class OpenSubscribe:
 
 def main():
     s = OpenSubscribe()
-    s.updateConfirmationMailSent()
     args = s.parseArgs()
     if args.setup:
         s.setup("config/config_stormy_stories.json")
     if args.confirmD:
-        s.confirmDeamon()
+        s.updateConfirmationMailSent("1")
+        #s.confirmDeamon()
 
 if __name__ == '__main__':
     main()
