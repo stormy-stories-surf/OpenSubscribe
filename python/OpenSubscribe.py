@@ -90,11 +90,11 @@ class OpenSubscribe:
             message["To"] = receipients
 
             # Create the plain-text and HTML version of your message
-            with open('confirmSubscribtion.txt', 'r') as file:
+            with open("mail-templates/confirmSubscribtion.txt", 'r') as file:
                 text = file.read()
                 text = text.replace("XXXXX", subscribtionID_)
 
-            with open('confirmSubscribtion.html', 'r') as file:
+            with open("mail-templates/confirmSubscribtion.html", 'r') as file:
                 html = file.read()
                 html = html.replace("XXXXX", subscribtionID_)
 
