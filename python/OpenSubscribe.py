@@ -78,11 +78,11 @@ class OpenSubscribe:
         subscribeID = receipientData_[1]
         print("Mail : " + mailaddress)
         print("SubscribeID : " + subscribeID)
-        return ""
 
         try:
-            receipientsList = [receipient_]
-            receipients = ", ".join(receipientsList)
+            #receipientsList = [receipient_]
+            #receipients = ", ".join(receipientsList)
+            receipients = mailaddress
             message = MIMEMultipart(
                 "Please confirm your subscribtion for STORMY-STORIES.SURF")
             message["Subject"] = "Please confirm your subscribtion for STORMY-STORIES.SURF"
