@@ -75,9 +75,9 @@ class OpenSubscribe:
 
     def sendConfirmSubscribtionMail(self, receipientData_):
         mailaddress = receipientData_[0]
-        subscribeID = receipientData_[1]
+        subscribtionID = receipientData_[1]
         print("Mail : " + mailaddress)
-        print("SubscribeID : " + subscribeID)
+        print("SubscribtionID : " + subscribtionID)
 
         try:
             #receipientsList = [receipient_]
