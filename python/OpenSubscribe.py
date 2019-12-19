@@ -11,8 +11,10 @@ from email.mime.multipart import MIMEMultipart
 
 class OpenSubscribe:
     def __init__(self):
-        self.sender_email="PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
-        self.sender_password="PUT_YOUR_SENDER_PASSWORD_HERE>"
+        self.sender_email = "PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
+        self.sender_password = "PUT_YOUR_SENDER_PASSWORD_HERE>"
+        self.smtp_server = "<PUT_YOUR_SMTP_SERVER_HERE>"
+        self.smtp_port = "<PUT_YOUR_SMTP_PORT_HERE>"
 
     def setup(self, configFileName_ = "config/config.json"):
         with open(configFileName_) as json_file:
@@ -63,7 +65,7 @@ class OpenSubscribe:
 
         # Try to log in to server and send email
         try:
-            self.server = smtplib.SMTP(self.smtp_server, self.port)
+            self.server = smtplib.SMTP(self.smtp_server, self.smtp_port)
             self.server.ehlo()  # Can be omitted
             self.server.starttls(context=self.context)  # Secure the connection
             self.server.ehlo()  # Can be omitted
