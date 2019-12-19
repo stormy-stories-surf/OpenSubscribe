@@ -11,7 +11,8 @@ from email.mime.multipart import MIMEMultipart
 
 class OpenSubscribe:
     def __init__(self):
-        print("")
+        self.sender_email="SMTP_SENDER_MAIL_ADDRESS"
+        self.sender_password="SMTP_SENDER_PASSWORD"
 
     def setup(self, configFileName_ = "config/config.json"):
         with open(configFileName_) as json_file:
@@ -66,7 +67,7 @@ class OpenSubscribe:
             self.server.ehlo()  # Can be omitted
             self.server.starttls(context=self.context)  # Secure the connection
             self.server.ehlo()  # Can be omitted
-            self.server.login(self.sender_email, self.password)
+            self.server.login(self.sender_email, self.sender_password)
 
         except Exception as e:
             # Print any error messages to stdout
@@ -119,11 +120,13 @@ class OpenSubscribe:
 
     def confirmDeamon(self):
         while (True):
+            self.smtpLogin()
             mailAddresses = self.getMailAddressesWithoutConfirmation()
             for mailAddress in mailAddresses:
                 self.sendConfirmSubscribtionMail(mailAddress)
+            self.smtpClose()
+            time.sleep(30)
 
-            time.sleep(1)
 
 
     def getMailAddressesWithoutConfirmation(self):
