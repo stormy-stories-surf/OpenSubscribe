@@ -95,9 +95,9 @@ class OpenSubscribe:
 
         with open("mail-templates/newSubscribtionInfo.html", 'r') as file:
             html = file.read()
-            text = text.replace("<MAILADDRESS>", mailaddress)
-            text = text.replace("<SUBSCRIBE_ID>", subscribeID)
-            text = text.replace("<UNSUBSCRIBE_ID>", unsubscribeID)
+            html = html.replace("<MAILADDRESS>", mailaddress)
+            html = html.replace("<SUBSCRIBE_ID>", subscribeID)
+            html = html.replace("<UNSUBSCRIBE_ID>", unsubscribeID)
 
         # set variables and send mail
         subject = "There is a new subscriber to your website!"
