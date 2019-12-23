@@ -76,7 +76,7 @@ class OpenSubscribe:
             print(e)
 
     def sendNewSubscribtionInfoMail(self, receipientData_):
-
+        print("test")
 
     def sendConfirmSubscribtionMail(self, receipientData_):
         # get individual data from receipientData_
