@@ -76,7 +76,37 @@ class OpenSubscribe:
             print(e)
 
     def sendNewSubscribtionInfoMail(self, receipientData_):
-        print("test")
+        # get individual data from receipientData_
+        id = receipientData_[0]
+        mailaddress = receipientData_[1]
+        subscribeID = receipientData_[2]
+        unsubscribeID = receipientData_[3]
+        print("ID : " + str(id))
+        print("Mail : " + mailaddress)
+        print("subscribeID : " + subscribeID)
+        print("unsubscribeID : " + unsubscribeID)
+
+        # Create the plain-text and HTML version of your message
+        with open("mail-templates/newSubscribtionInfo.txt", 'r') as file:
+            text = file.read()
+            text = text.replace("<MAILADDRESS>", mailaddress)
+            text = text.replace("<SUBSCRIBE_ID>", subscribeID)
+            text = text.replace("<UNSUBSCRIBE_ID>", unsubscribeID)
+
+        with open("mail-templates/newSubscribtionInfo.html", 'r') as file:
+            html = file.read()
+            text = text.replace("<MAILADDRESS>", mailaddress)
+            text = text.replace("<SUBSCRIBE_ID>", subscribeID)
+            text = text.replace("<UNSUBSCRIBE_ID>", unsubscribeID)
+
+        # set variables and send mail
+        subject = "There is a new subscriber to your website!"
+        fromMail = self.sender_email
+        toMail = "info@stormy-stories.surf"
+        ccMail = ""
+        bccMail = ""
+
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, txt, html)
 
     def sendConfirmSubscribtionMail(self, receipientData_):
         # get individual data from receipientData_
@@ -143,6 +173,7 @@ class OpenSubscribe:
             mailAddresses = self.getMailAddressesWithoutConfirmation()
             for mailAddress in mailAddresses:
                 self.sendConfirmSubscribtionMail(mailAddress)
+                self.sendNewSubscribtionInfoMail(mailAddress)
                 subscribeID = mailAddress[0]
                 self.updateConfirmationMailSent(subscribeID)
             self.smtpClose()
