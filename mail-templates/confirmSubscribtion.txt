@@ -3,9 +3,14 @@ Very soon you will automatically receive a mail, when we publish a new post.
 
 But first please confirm your subscription by clicking the below link.
 
-Click here to subscribe! : <PUT_YOUR_URL_HERE>/ConfirmSubscribtion.php?data=XXXXX
+Click here to subscribe! : <PUT_YOUR_URL_HERE>/ConfirmSubscribtion.php?data=<SUBSCRIBE_ID>
 
 Thanks a lot for your interest, your stormy-stories team!
+
+
+If you somehow by accident clicked on the subscribe button or decided to not want to receive any further mails from us click the blow link.</p>
+This will delete all the data which is connected to your mail-address from our servers.</p>
+<PUT_YOUR_URL_HERE>/Unsubscribe.php?data=<UNSUBSCRIBE_ID>
 
 -------------------------------------------------------
 
@@ -14,6 +19,11 @@ Schon bald wirst du automatisch per Mail über unsere neuen Beiträge benachrich
 
 Aber vorher bestätige bitte noch einmal dein Abonnement indem du den Link unten anklickst:
 
-Hier klicken, um das Abonnement zu bestätigen : <PUT_YOUR_URL_HERE>/ConfirmSubscribtion.php?data=XXXXX
+Hier klicken, um das Abonnement zu bestätigen : <PUT_YOUR_URL_HERE>/ConfirmSubscribtion.php?data=<SUBSCRIBE_ID>
 
 Vielen Dank für dein Interesse, dein stormy-stories Team!
+
+
+Falls du aus irgendeinem Grund versehentlich auf den Abonnieren-Button geklickt haben solltest oder du aus einem anderen Grund keine weiteren Mails von uns erhalten möchtest, dann klicke auf den folgenden Link.
+<p>Dies wird alle Daten die mit deiner E-Mail Adresse verknüpft sind von unseren Servern löschen.
+<PUT_YOUR_URL_HERE>/Unsubscribe.php?data=<UNSUBSCRIBE_ID>

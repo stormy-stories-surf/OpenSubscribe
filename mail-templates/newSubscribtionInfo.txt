@@ -1,0 +1,9 @@
+There is a new subscriber to your website!
+E-Mail Address : <MAILADDRESS>
+SubscribeID : <SUBSCRIBE_ID>
+UnsubscribeID : <UNSUBSCRIBE_ID>
+-------------------------------------------------------
+Jemand Neues hat den Newsletter deiner Website abonniert!
+E-Mail Address : <MAILADDRESS>
+SubscribeID : <SUBSCRIBE_ID>
+UnsubscribeID : <UNSUBSCRIBE_ID>
