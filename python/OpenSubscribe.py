@@ -106,7 +106,7 @@ class OpenSubscribe:
         ccMail = ""
         bccMail = ""
 
-        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, txt, html)
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
 
     def sendConfirmSubscribtionMail(self, receipientData_):
         # get individual data from receipientData_
@@ -137,7 +137,7 @@ class OpenSubscribe:
         ccMail = ""
         bccMail = "info@stormy-stories.surf"
 
-        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, txt, html)
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
 
     def sendMail(self, subject_, from_, to_, cc_, bcc_, contentTXT_, contentHTML_):
         try:
