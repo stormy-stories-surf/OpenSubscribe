@@ -114,7 +114,7 @@ class OpenSubscribe:
         mailaddress = receipientData_[1]
         subscribeID = receipientData_[2]
         unsubscribeID = receipientData_[3]
-        print("ID : " + str(id))
+        print("ID :  " + str(id))
         print("Mail : " + mailaddress)
         print("subscribeID : " + subscribeID)
         print("unsubscribeID : " + unsubscribeID)
