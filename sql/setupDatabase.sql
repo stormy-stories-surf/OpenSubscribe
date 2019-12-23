@@ -36,6 +36,7 @@ CREATE USER 'SendMailsUser'@'localhost' IDENTIFIED BY '<PUT_YOUR_SEND_MAILS_USER
 
 /* GRANT ACCESS TO TABLES */
 GRANT UPDATE ON OpenSubscribe.subscriber TO 'ConfirmSubscribtionUser'@'localhost';
+GRANT SELECT ON OpenSubscribe.subscriber TO 'ConfirmSubscribtionUser'@'localhost';
 
 GRANT INSERT ON OpenSubscribe.subscriber TO 'SubscribtionFormUser'@'localhost';
 GRANT SELECT ON OpenSubscribe.subscriber TO 'SubscribtionFormUser'@'localhost';
