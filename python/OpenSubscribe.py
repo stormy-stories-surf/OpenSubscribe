@@ -75,46 +75,60 @@ class OpenSubscribe:
             # Print any error messages to stdout
             print(e)
 
+    def sendNewSubscribtionInfoMail(self, receipientData_):
+
+
     def sendConfirmSubscribtionMail(self, receipientData_):
+        # get individual data from receipientData_
         id = receipientData_[0]
         mailaddress = receipientData_[1]
-        subscribtionID = receipientData_[2]
+        subscribeID = receipientData_[2]
+        unsubscribeID = receipientData_[3]
         print("ID : " + str(id))
         print("Mail : " + mailaddress)
-        print("SubscribtionID : " + subscribtionID)
+        print("subscribeID : " + subscribeID)
+        print("unsubscribeID : " + unsubscribeID)
 
+        # Create the plain-text and HTML version of your message
+        with open("mail-templates/confirmSubscribtion.txt", 'r') as file:
+            text = file.read()
+            text = text.replace("<SUBSCRIBE_ID>", subscribeID)
+            text = text.replace("<UNSUBSCRIBE_ID>", unsubscribeID)
+
+        with open("mail-templates/confirmSubscribtion.html", 'r') as file:
+            html = file.read()
+            html = html.replace("<SUBSCRIBE_ID>", subscribeID)
+            html = html.replace("<UNSUBSCRIBE_ID>", unsubscribeID)
+
+        # set variables and send mail
+        subject = "Please confirm your subscribtion for STORMY-STORIES.SURF"
+        fromMail = self.sender_email
+        toMail = mailaddress
+        ccMail = ""
+        bccMail = "info@stormy-stories.surf"
+
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, txt, html)
+
+    def sendMail(self, subject_, from_, to_, cc_, bcc_, contentTXT_, contentHTML_):
         try:
-            #receipientsList = [receipient_]
-            #receipients = ", ".join(receipientsList)
-            receipients = mailaddress
-            message = MIMEMultipart(
-                "Please confirm your subscribtion for STORMY-STORIES.SURF")
-            message["Subject"] = "Please confirm your subscribtion for STORMY-STORIES.SURF"
-            message["From"] = self.sender_email
-            message["To"] = receipients
-            message["Bcc"] = "info@stormy-stories.surf"
-
-            # Create the plain-text and HTML version of your message
-            with open("mail-templates/confirmSubscribtion.txt", 'r') as file:
-                text = file.read()
-                text = text.replace("XXXXX", subscribtionID)
-
-            with open("mail-templates/confirmSubscribtion.html", 'r') as file:
-                html = file.read()
-                html = html.replace("XXXXX", subscribtionID)
+            message = MIMEMultipart(subject_)
+            message["Subject"] = subject_
+            message["From"] = from_
+            message["To"] = to_
+            message["Cc"] = cc_
+            message["Bcc"] = bcc_
 
             # Turn these into plain/html MIMEText objects
-            part1 = MIMEText(text, "plain")
-            part2 = MIMEText(html, "html")
+            part1 = MIMEText(contentTXT_, "plain")
+            part2 = MIMEText(contentHTML_, "html")
 
             # Add HTML/plain-text parts to MIMEMultipart message
             # The email client will try to render the last part first
             message.attach(part1)
             message.attach(part2)
 
-            self.server.sendmail(
-                self.sender_email, receipients, message.as_string())
-            print("Successfully sent email")
+            self.server.sendmail(from_, to_, message.as_string())
+            print("Successfully sent email from " + from_ + " to " + to_)
 
         except Exception as e:
             # Print any error messages to stdout
@@ -145,7 +159,7 @@ class OpenSubscribe:
             )
 
             mycursor = mydb.cursor()
-            mycursor.execute( "SELECT id, mailaddress, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
+            mycursor.execute( "SELECT id, mailaddress, subscribeID, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
             myresult = mycursor.fetchall()
 
         except Error as error:
