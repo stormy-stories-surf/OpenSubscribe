@@ -190,7 +190,7 @@ class OpenSubscribe:
             )
 
             mycursor = mydb.cursor()
-            mycursor.execute( "SELECT id, mailaddress, subscribeID, subscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
+            mycursor.execute( "SELECT id, mailaddress, subscribeID, unsubscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
             myresult = mycursor.fetchall()
 
         except Error as error:
