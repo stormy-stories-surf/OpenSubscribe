@@ -29,7 +29,7 @@ function update_subscribtion_confirmed($subscribeID_p) {
   $sql_l = "UPDATE subscriber SET subscribtionConfirmed=true WHERE subscribeID=?";
   $pdo_l->prepare($sql_l)->execute([$subscribeID_p]);
 
-	echo "Updated newsletter subscribtion with subscribeID " . $subscribeID_l . "<br />";
+	echo "Updated newsletter subscribtion with subscribeID " . $subscribeID_p . "<br />";
 }
 
 // main
