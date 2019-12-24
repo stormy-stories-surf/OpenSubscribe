@@ -8,8 +8,8 @@ Click here to subscribe! : <PUT_YOUR_URL_HERE>/ConfirmSubscribtion.php?data=<SUB
 Thanks a lot for your interest, your stormy-stories team!
 
 
-If you somehow by accident clicked on the subscribe button or decided to not want to receive any further mails from us click the blow link.</p>
-This will delete all the data which is connected to your mail-address from our servers.</p>
+If you somehow by accident clicked on the subscribe button or decided to not want to receive any further mails from us click the blow link.
+This will delete all the data which is connected to your mail-address from our servers.
 <PUT_YOUR_URL_HERE>/Unsubscribe.php?data=<UNSUBSCRIBE_ID>
 
 -------------------------------------------------------
