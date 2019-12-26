@@ -336,8 +336,6 @@ def main():
     args = s.parseArgs()
     if args.setup:
         s.setup("config/config_stormy_stories.json")
-    if args.confirmD:
-        s.confirmDeamon()
     if args.infoMailD:
         s.infoMailDeamon()
 
