@@ -6,6 +6,13 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 <img src="docs/pictures/UnderConstructionIcon.png" width="15%">
 
 ## Setup
+```
+mysql
+source sql/setupDatabase.sql
+cp -v php/Unsubscribe.php /var/www/html/wp-content/
+cp -v php/ConfirmSubscribtion.php /var/www/html/wp-content/
+cp -v php/SubscribtionForm.php /var/www/html/wp-content/themes/radcliffe/OpenSubscribe/
+```
 
 ### Install dependencies
 pip3 install mysql-connector-python
