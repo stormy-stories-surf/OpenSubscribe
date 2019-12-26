@@ -33,13 +33,18 @@ class OpenSubscribe:
             sendConfirmSubscribtionMails = data["SEND_CONFIRM_SUBSCRIBTION_MAILS"]
             sendConfirmSubscribtionMailsSqlUser = sendConfirmSubscribtionMails["SQL_USER"]
             sendConfirmSubscribtionMailsSqlPW = sendConfirmSubscribtionMails["SQL_PASSWORD"]
+            unsubscribe = data["UNSUBSCRIBE"]
+            unsubscribeSqlUser = unsubscribe["SQL_USER"]
+            unsubscribeSqlPW = unsubscribe["SQL_PASSWORD"]
 
         print("Setup done")
 
         for filename in ["mail-templates/confirmSubscribtion.html",
                          "mail-templates/confirmSubscribtion.txt",
+                         "mail-templates/newBlogPost.txt",
                          "php/ConfirmSubscribtion.php",
                          "php/SubscribtionForm.php",
+                         "php/Unsubscribe.php",
                          "python/OpenSubscribe.py",
                          "sql/setupDatabase.sql"
                          ]:
@@ -51,6 +56,7 @@ class OpenSubscribe:
             self.replaceStringInFile(filename, "<PUT_YOUR_CONFIRM_SUBSCRIBTION_USER_PASSWORD_HERE>", confirmSubscribtionSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_SUBSCRIBTION_FORM_USER_PASSWORD_HERE>", subscribtionFormSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>", sendConfirmSubscribtionMailsSqlPW)
+            self.replaceStringInFile(filename, "<PUT_YOUR_UNSUBSCRIBE_USER_PASSWORD_HERE>", unsubscribeSqlPW)
 
 
 
