@@ -323,12 +323,6 @@ class OpenSubscribe:
              help='Setup OpenSubscribe with options set in config.json')
 
         parser.add_argument(
-            '--confirmD', action='store_true',
-             help='Runs the confirm-subscribtion-mails daemon, which as a ' +
-                  'never ending service checks the database for new subscribtions' +
-                  'and sends a confirm-subscribtion mail for every new subscribtion')
-
-        parser.add_argument(
             '--infoMailD', action='store_true',
              help='Runs a never ending service that sends confirm-subscribtion ' +
                   'mails for every new subscribtion and info mails for every '+
