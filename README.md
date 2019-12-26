@@ -9,9 +9,10 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 ```
 mysql
 source sql/setupDatabase.sql
-cp -v php/Unsubscribe.php /var/www/html/wp-content/
-cp -v php/ConfirmSubscribtion.php /var/www/html/wp-content/
+cp -v php/Unsubscribe.php /var/www/html/
+cp -v php/ConfirmSubscribtion.php /var/www/html/
 cp -v php/SubscribtionForm.php /var/www/html/wp-content/themes/radcliffe/OpenSubscribe/
+cp -v systemd/OpenSubscribeInfoMailD.service /etc/systemd/system/
 ```
 
 ### Install dependencies
