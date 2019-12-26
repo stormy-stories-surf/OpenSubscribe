@@ -205,23 +205,47 @@ class OpenSubscribe:
         for mailAddress in mailAddresses:
             self.sendConfirmSubscribtionMail(mailAddress)
             self.sendNewSubscribtionInfoMail(mailAddress)
-            subscribeID = mailAddress[0]
-            self.updateConfirmationMailSent(subscribeID)
+            id = mailAddress[0]
+            self.updateConfirmationMailSent(id)
         self.smtpClose()
 
     def sendUnsubscribedMails(self):
         self.smtpLogin()
-        mailAddresses = self.getUnsubscribedMailAddresses() # todo
+        mailAddresses = self.getUnsubscribedMailAddresses()
         for mailAddress in mailAddresses:
             self.sendUnsubscribedInfoMail(mailAddress)
-            unsubscribeID = mailAddress[0]
-            self.updateUnSubscribedMailSent(unsubscribeID) # todo
+            id = mailAddress[0]
+            self.updateUnSubscribedMailSent(id)
         self.smtpClose()
 
     def infoMailDeamon(self):
         while (True):
             self.sendConfirmSubscribtionMails()
+            self.sendUnsubscribedMails()
             time.sleep(30)
+
+    def getUnsubscribedMailAddresses(self):
+        myresult = ""
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
+
+            mycursor = mydb.cursor()
+            mycursor.execute( "SELECT id, mailaddress, subscribeID, unsubscribeID FROM subscriber WHERE unSubscribed = 1 AND unSubscribedMailSent = 0 ")
+            myresult = mycursor.fetchall()
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mycursor.close()
+            mydb.close()
+            return myresult
+
 
     def getMailAddressesWithoutConfirmation(self):
         myresult = ""
@@ -244,6 +268,29 @@ class OpenSubscribe:
             mycursor.close()
             mydb.close()
             return myresult
+
+    def updateUnSubscribedMailSent(self):
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
+
+            mycursor = mydb.cursor()
+            query = "UPDATE subscriber SET unSubscribedMailSent = 1 WHERE id = %s"
+            mycursor.execute(query, (subscriberID_,))
+
+            # accept the changes
+            mydb.commit()
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mycursor.close()
+            mydb.close()
 
     def updateConfirmationMailSent(self,subscriberID_):
         try:
