@@ -5,7 +5,7 @@ function update_subscribtion_confirmed($subscribeID_p) {
         // open database connection
 	$pdo_l = new PDO('mysql:host=localhost;dbname=OpenSubscribe', 'ConfirmSubscribtionUser', '<PUT_YOUR_CONFIRM_SUBSCRIBTION_USER_PASSWORD_HERE>');
 
-	// prepare and execute insert
+	// prepare and execute update
   $sql_l = "UPDATE subscriber SET subscribtionConfirmed=true WHERE subscribeID=?";
   $pdo_l->prepare($sql_l)->execute([$subscribeID_p]);
 
@@ -14,9 +14,9 @@ function update_subscribtion_confirmed($subscribeID_p) {
 
 // main
 if ($_GET["data"] != "") {
-	$subscribtionID = $_GET["data"];
-  //echo "ID is " . $subscribtionID . "<br />";
-	update_subscribtion_confirmed($subscribtionID);
+	$subscribeID = $_GET["data"];
+  //echo "ID is " . $subscribeID . "<br />";
+	update_subscribtion_confirmed($subscribeID);
 }
 
 

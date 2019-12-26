@@ -1,0 +1,20 @@
+A new stormy story is online!
+Check it out!
+
+
+We got news for you! A new blog post was published.
+If you're interested check it out :)
+
+-------------------------------------------------------
+
+Es gibt Neuigkeiten! Wir haben eine neuen Blog-Post veröffentlicht.
+Wenn er dich interessiert, dann schau doch mal vorbei :)
+
+Den Beitrag lesen
+<PUT_YOUR_URL_HERE>/GoTo.php?data=<UNSUBSCRIBE_ID>
+
+-------------------------------------------------------
+
+Du möchtest keine weiteren Mails von uns erhalten? Dann klicke auf den folgenden Link.
+Dies wird alle Daten die mit deiner E-Mail Adresse verknüpft sind von unseren Servern löschen.
+<PUT_YOUR_URL_HERE>/Unsubscribe.php?data=<UNSUBSCRIBE_ID>
