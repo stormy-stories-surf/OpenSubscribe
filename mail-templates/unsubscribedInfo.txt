@@ -1,0 +1,5 @@
+Someone unSubscribed from your mail-newsletter of your website!
+E-Mail Address : <MAILADDRESS>
+-------------------------------------------------------
+Jemand hat sich vom Newsletter deiner Website abgemeldet!
+E-Mail Address : <MAILADDRESS>

@@ -14,7 +14,8 @@ CREATE TABLE subscriber (
    unsubscribeID text NOT NULL,
    confirmationMailSent boolean,
    subscribtionConfirmed boolean,
-   unSubscribed boolean
+   unSubscribed boolean,
+   unSubscribedMailSent boolean
 );
 
 /* table which stores the timestamp of the

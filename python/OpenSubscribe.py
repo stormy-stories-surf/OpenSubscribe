@@ -24,18 +24,18 @@ class OpenSubscribe:
             smtpPort = data["SMTP_PORT"]
             smtpSenderMailAddress = data["SMTP_SENDER_MAIL_ADDRESS"]
             smtpSenderPassword = data["SMTP_SENDER_PASSWORD"]
-            confirmSubscribtion = data["CONFIRM_SUBSCRIBTION"]
-            confirmSubscribtionSqlUser = confirmSubscribtion["SQL_USER"]
-            confirmSubscribtionSqlPW = confirmSubscribtion["SQL_PASSWORD"]
-            subscribtionForm = data["SUBSCRIBTION_FORM"]
-            subscribtionFormSqlUser = subscribtionForm["SQL_USER"]
-            subscribtionFormSqlPW = subscribtionForm["SQL_PASSWORD"]
-            sendConfirmSubscribtionMails = data["SEND_CONFIRM_SUBSCRIBTION_MAILS"]
-            sendConfirmSubscribtionMailsSqlUser = sendConfirmSubscribtionMails["SQL_USER"]
-            sendConfirmSubscribtionMailsSqlPW = sendConfirmSubscribtionMails["SQL_PASSWORD"]
-            unsubscribe = data["UNSUBSCRIBE"]
-            unsubscribeSqlUser = unsubscribe["SQL_USER"]
-            unsubscribeSqlPW = unsubscribe["SQL_PASSWORD"]
+            confirmSubscribtionData = data["CONFIRM_SUBSCRIBTION"]
+            confirmSubscribtionSqlUser = confirmSubscribtionData["SQL_USER"]
+            confirmSubscribtionSqlPW = confirmSubscribtionData["SQL_PASSWORD"]
+            subscribtionFormData = data["SUBSCRIBTION_FORM"]
+            subscribtionFormSqlUser = subscribtionFormData["SQL_USER"]
+            subscribtionFormSqlPW = subscribtionFormData["SQL_PASSWORD"]
+            sendConfirmSubscribtionMailsData = data["SEND_CONFIRM_SUBSCRIBTION_MAILS"]
+            sendConfirmSubscribtionMailsSqlUser = sendConfirmSubscribtionMailsData["SQL_USER"]
+            sendConfirmSubscribtionMailsSqlPW = sendConfirmSubscribtionMailsData["SQL_PASSWORD"]
+            unsubscribeData = data["UNSUBSCRIBE"]
+            unsubscribeSqlUser = unsubscribeData["SQL_USER"]
+            unsubscribeSqlPW = unsubscribeData["SQL_PASSWORD"]
 
         print("Setup done")
 
@@ -114,6 +114,32 @@ class OpenSubscribe:
 
         self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
 
+    def sendUnsubscribedInfoMail(self, receipientData_):
+        # get individual data from receipientData_
+        id = receipientData_[0]
+        mailaddress = receipientData_[1]
+        print("ID : " + str(id))
+        print("Mail : " + mailaddress)
+
+        # Create the plain-text and HTML version of your message
+        with open("mail-templates/unsubscribedInfo.txt", 'r') as file:
+            text = file.read()
+            text = text.replace("<MAILADDRESS>", mailaddress)
+
+        with open("mail-templates/unsubscribedInfo.html", 'r') as file:
+            html = file.read()
+            html = html.replace("<MAILADDRESS>", mailaddress)
+
+        # set variables and send mail
+        subject = "Someone unSubscribed from your mail-newsletter of your website!"
+        fromMail = self.sender_email
+        toMail = "info@stormy-stories.surf"
+        ccMail = ""
+        bccMail = ""
+
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
+
+
     def sendConfirmSubscribtionMail(self, receipientData_):
         # get individual data from receipientData_
         id = receipientData_[0]
@@ -173,16 +199,28 @@ class OpenSubscribe:
     def smtpClose(self):
         self.server.quit()
 
-    def confirmDeamon(self):
+    def sendConfirmSubscribtionMails(self):
+        self.smtpLogin()
+        mailAddresses = self.getMailAddressesWithoutConfirmation()
+        for mailAddress in mailAddresses:
+            self.sendConfirmSubscribtionMail(mailAddress)
+            self.sendNewSubscribtionInfoMail(mailAddress)
+            subscribeID = mailAddress[0]
+            self.updateConfirmationMailSent(subscribeID)
+        self.smtpClose()
+
+    def sendUnsubscribedMails(self):
+        self.smtpLogin()
+        mailAddresses = self.getUnsubscribedMailAddresses() # todo
+        for mailAddress in mailAddresses:
+            self.sendUnsubscribedInfoMail(mailAddress)
+            unsubscribeID = mailAddress[0]
+            self.updateUnSubscribedMailSent(unsubscribeID) # todo
+        self.smtpClose()
+
+    def infoMailDeamon(self):
         while (True):
-            self.smtpLogin()
-            mailAddresses = self.getMailAddressesWithoutConfirmation()
-            for mailAddress in mailAddresses:
-                self.sendConfirmSubscribtionMail(mailAddress)
-                self.sendNewSubscribtionInfoMail(mailAddress)
-                subscribeID = mailAddress[0]
-                self.updateConfirmationMailSent(subscribeID)
-            self.smtpClose()
+            self.sendConfirmSubscribtionMails()
             time.sleep(30)
 
     def getMailAddressesWithoutConfirmation(self):
@@ -243,6 +281,12 @@ class OpenSubscribe:
                   'never ending service checks the database for new subscribtions' +
                   'and sends a confirm-subscribtion mail for every new subscribtion')
 
+        parser.add_argument(
+            '--infoMailD', action='store_true',
+             help='Runs a never ending service that sends confirm-subscribtion ' +
+                  'mails for every new subscribtion and info mails for every '+
+                  'new confirmed mail address and every unsubscribed mail address')
+
         args = parser.parse_args()
         return args
 
@@ -253,6 +297,9 @@ def main():
         s.setup("config/config_stormy_stories.json")
     if args.confirmD:
         s.confirmDeamon()
+    if args.infoMailD:
+        s.infoMailDeamon()
+
 
 if __name__ == '__main__':
     main()
