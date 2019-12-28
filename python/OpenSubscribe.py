@@ -321,7 +321,7 @@ class OpenSubscribe:
 
         try:
             from_ = "info@stormy-stories.surf"
-            to_ = "a.online+test@stormy-stories.surf"
+            to_ = "info@stormy-stories.surf"
             message = MIMEMultipart("subject_")
             message["Subject"] = "subject_"
             message["From"] = from_
