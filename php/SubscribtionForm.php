@@ -54,7 +54,7 @@ function insert_new_subscriber($mailAddress_p) {
   $unsubscribeID_l = openssl_random_pseudo_bytes(64,$cryptoStrong_l);
   $subscribeID_l = bin2hex($subscribeID_l);
   $unsubscribeID_l = bin2hex($unsubscribeID_l);
-	$statement = $pdo_l->prepare("INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent boolean) VALUES (NULL, ?, ?, ?, false, false, false, false)");
+	$statement = $pdo_l->prepare("INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, ?, ?, ?, false, false, false, false)");
 	$statement->execute(array($mailAddress_p, $subscribeID_l, $unsubscribeID_l));
   #echo "Inserted new subscriber " . $mailAddress_p . " with subscribeID : " . $subscribeID_l . " and with unsubscribeID : " . $unsubscribeID_l . "<br />";
 
