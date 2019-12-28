@@ -8,6 +8,7 @@ import json
 import mysql.connector
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
 
 class OpenSubscribe:
     def __init__(self):
@@ -315,6 +316,46 @@ class OpenSubscribe:
             mycursor.close()
             mydb.close()
 
+    def sendNewsletter(self):
+        self.smtpLogin()
+
+        try:
+            from_ = "info@stormy-stories.surf"
+            to_ = "a.online+test@stormy-stories.surf"
+            message = MIMEMultipart("subject_")
+            message["Subject"] = "subject_"
+            message["From"] = from_
+            message["To"] = to_
+            message["Cc"] = ""
+            message["Bcc"] = ""
+
+            # Encapsulate the plain and HTML versions of the message body in an
+            # 'alternative' part, so message agents can decide which they want to display.
+            msgAlternative = MIMEMultipart('alternative')
+            message.attach(msgAlternative)
+
+            msgText = MIMEText('This is the alternative plain text message.')
+            msgAlternative.attach(msgText)
+
+            # We reference the image in the IMG SRC attribute by the ID we give it below
+            msgText = MIMEText('<b>Some <i>HTML</i> tex</b> and an image.<br><img src="cid:image1"><br>Nifty!', 'html')
+            msgAlternative.attach(msgText)
+
+            # This example assumes the image is in the current directory
+            fp = open('test.jpg', 'rb')
+            msgImage = MIMEImage(fp.read())
+            fp.close()
+
+            # Define the image's ID as referenced above
+            msgImage.add_header('Content-ID', 'image1')
+            message.attach(msgImage)
+
+            self.server.sendmail(from_, to_, message.as_string())
+            print("Successfully sent email from " + from_ + " to " + to_)
+
+        except Exception as e:
+            # Print any error messages to stdout
+            print(e)
 
     def parseArgs(self):
         parser = argparse.ArgumentParser()
@@ -328,6 +369,10 @@ class OpenSubscribe:
                   'mails for every new subscribtion and info mails for every '+
                   'new confirmed mail address and every unsubscribed mail address')
 
+        parser.add_argument(
+            '--sendNewsletter', action='store_true',
+             help='')
+
         args = parser.parse_args()
         return args
 
@@ -338,7 +383,8 @@ def main():
         s.setup("config/config_stormy_stories.json")
     if args.infoMailD:
         s.infoMailDeamon()
-
+    if args.sendNewsletter:
+        s.sendNewsletter()
 
 if __name__ == '__main__':
     main()
