@@ -269,7 +269,7 @@ class OpenSubscribe:
             mydb.close()
             return myresult
 
-    def updateUnSubscribedMailSent(self):
+    def updateUnSubscribedMailSent(self, id_):
         try:
             mydb = mysql.connector.connect(
                 host="localhost",
@@ -280,7 +280,7 @@ class OpenSubscribe:
 
             mycursor = mydb.cursor()
             query = "UPDATE subscriber SET unSubscribedMailSent = 1 WHERE id = %s"
-            mycursor.execute(query, (subscriberID_,))
+            mycursor.execute(query, (id_,))
 
             # accept the changes
             mydb.commit()
