@@ -279,7 +279,7 @@ class OpenSubscribe:
             )
 
             mycursor = mydb.cursor()
-            query = "UPDATE subscriber SET unSubscribedMailSent = 1 WHERE id = %s"
+            query = "UPDATE subscriber SET mailaddress = '', unSubscribedMailSent = 1 WHERE id = %s"
             mycursor.execute(query, (id_,))
 
             # accept the changes
