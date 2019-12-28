@@ -7,12 +7,16 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 
 ## Setup
 ```
-mysql
-source sql/setupDatabase.sql
+sudo su
+mysql -u user -p < sql/setupDatabase.sql
+python3 python/OpenSubscribe.py --setup
 cp -v php/Unsubscribe.php /var/www/html/
 cp -v php/ConfirmSubscribtion.php /var/www/html/
 cp -v php/SubscribtionForm.php /var/www/html/wp-content/themes/radcliffe/OpenSubscribe/
 cp -v systemd/OpenSubscribeInfoMailD.service /etc/systemd/system/
+systemctl daemon-reload
+systemctl restart OpenSubscribeInfoMailD.service
+systemctl status OpenSubscribeInfoMailD.service
 ```
 
 ### Install dependencies

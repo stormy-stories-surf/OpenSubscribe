@@ -24,6 +24,7 @@ class OpenSubscribe:
             smtpPort = data["SMTP_PORT"]
             smtpSenderMailAddress = data["SMTP_SENDER_MAIL_ADDRESS"]
             smtpSenderPassword = data["SMTP_SENDER_PASSWORD"]
+            mailTemplatesDir = data["MAIL_TEMPLATES_DIR"]
             confirmSubscribtionData = data["CONFIRM_SUBSCRIBTION"]
             confirmSubscribtionSqlUser = confirmSubscribtionData["SQL_USER"]
             confirmSubscribtionSqlPW = confirmSubscribtionData["SQL_PASSWORD"]
@@ -51,14 +52,13 @@ class OpenSubscribe:
             self.replaceStringInFile(filename, "<PUT_YOUR_URL_HERE>", urlWebsite)
             self.replaceStringInFile(filename, "<PUT_YOUR_SMTP_SERVER_HERE>", smtpServer)
             self.replaceStringInFile(filename, "<PUT_YOUR_SMTP_PORT_HERE>", smtpPort)
+            self.replaceStringInFile(filename, "<PUT_YOUR_MAIL_TEMPLATES_DIR_HERE>", mailTemplatesDir)
             self.replaceStringInFile(filename, "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>", smtpSenderMailAddress)
             self.replaceStringInFile(filename, "<PUT_YOUR_SENDER_PASSWORD_HERE>", smtpSenderPassword)
             self.replaceStringInFile(filename, "<PUT_YOUR_CONFIRM_SUBSCRIBTION_USER_PASSWORD_HERE>", confirmSubscribtionSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_SUBSCRIBTION_FORM_USER_PASSWORD_HERE>", subscribtionFormSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>", sendConfirmSubscribtionMailsSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_UNSUBSCRIBE_USER_PASSWORD_HERE>", unsubscribeSqlPW)
-
-
 
     def replaceStringInFile(self, filename, old_string, new_string):
         with fileinput.FileInput(filename, inplace=True) as file:
@@ -93,13 +93,13 @@ class OpenSubscribe:
         print("unsubscribeID : " + unsubscribeID)
 
         # Create the plain-text and HTML version of your message
-        with open("mail-templates/newSubscribtionInfo.txt", 'r') as file:
+        with open("<PUT_YOUR_MAIL_TEMPLATES_DIR_HERE>/newSubscribtionInfo.txt", 'r') as file:
             text = file.read()
             text = text.replace("<MAILADDRESS>", mailaddress)
             text = text.replace("<SUBSCRIBE_ID>", subscribeID)
             text = text.replace("<UNSUBSCRIBE_ID>", unsubscribeID)
 
-        with open("mail-templates/newSubscribtionInfo.html", 'r') as file:
+        with open("<PUT_YOUR_MAIL_TEMPLATES_DIR_HERE>/newSubscribtionInfo.html", 'r') as file:
             html = file.read()
             html = html.replace("<MAILADDRESS>", mailaddress)
             html = html.replace("<SUBSCRIBE_ID>", subscribeID)
@@ -122,11 +122,11 @@ class OpenSubscribe:
         print("Mail : " + mailaddress)
 
         # Create the plain-text and HTML version of your message
-        with open("mail-templates/unsubscribedInfo.txt", 'r') as file:
+        with open("<PUT_YOUR_MAIL_TEMPLATES_DIR_HERE>/unsubscribedInfo.txt", 'r') as file:
             text = file.read()
             text = text.replace("<MAILADDRESS>", mailaddress)
 
-        with open("mail-templates/unsubscribedInfo.html", 'r') as file:
+        with open("<PUT_YOUR_MAIL_TEMPLATES_DIR_HERE>/unsubscribedInfo.html", 'r') as file:
             html = file.read()
             html = html.replace("<MAILADDRESS>", mailaddress)
 
@@ -152,12 +152,12 @@ class OpenSubscribe:
         print("unsubscribeID : " + unsubscribeID)
 
         # Create the plain-text and HTML version of your message
-        with open("mail-templates/confirmSubscribtion.txt", 'r') as file:
+        with open("<PUT_YOUR_MAIL_TEMPLATES_DIR_HERE>/confirmSubscribtion.txt", 'r') as file:
             text = file.read()
             text = text.replace("<SUBSCRIBE_ID>", subscribeID)
             text = text.replace("<UNSUBSCRIBE_ID>", unsubscribeID)
 
-        with open("mail-templates/confirmSubscribtion.html", 'r') as file:
+        with open("<PUT_YOUR_MAIL_TEMPLATES_DIR_HERE>/confirmSubscribtion.html", 'r') as file:
             html = file.read()
             html = html.replace("<SUBSCRIBE_ID>", subscribeID)
             html = html.replace("<UNSUBSCRIBE_ID>", unsubscribeID)
