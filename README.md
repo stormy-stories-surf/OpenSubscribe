@@ -8,8 +8,10 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 ## Setup
 ```
 sudo su
-mysql -u user -p < sql/setupDatabase.sql
+git stash
+git pull
 python3 python/OpenSubscribe.py --setup
+mysql -u user -p < sql/setupDatabase.sql
 cp -v php/Unsubscribe.php /var/www/html/
 cp -v php/ConfirmSubscribtion.php /var/www/html/
 cp -v php/SubscribtionForm.php /var/www/html/wp-content/themes/radcliffe/OpenSubscribe/
