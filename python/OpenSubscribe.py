@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import os
 import argparse
 import time
 import fileinput
@@ -197,6 +198,8 @@ class OpenSubscribe:
             msgAlternative.attach(partHtml)
 
             for image in images_:
+                print("image path : "+ image)
+                print("image file name " + os.path.splitext(image)[0])
                 # This example assumes the image is in the current directory
                 fp = open(image, 'rb')
                 msgImage = MIMEImage(fp.read())
