@@ -11,7 +11,9 @@ sudo su
 git stash
 git pull
 python3 python/OpenSubscribe.py --setup
-mysql -u user -p < sql/setupDatabase.sql
+#exit
+#mysql -u user -p < sql/setupDatabase.sql
+#sudo su
 cp -v php/Unsubscribe.php /var/www/html/
 cp -v php/ConfirmSubscribtion.php /var/www/html/
 cp -v php/SubscribtionForm.php /var/www/html/wp-content/themes/radcliffe/OpenSubscribe/
