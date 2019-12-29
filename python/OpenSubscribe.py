@@ -199,14 +199,14 @@ class OpenSubscribe:
 
             for image in images_:
                 print("image path : "+ image)
-                print("image file name " + os.path.splitext(image)[0])
+                print("image file name " + os.path.splitext(os.path.basename(image))[0])
                 # This example assumes the image is in the current directory
                 fp = open(image, 'rb')
                 msgImage = MIMEImage(fp.read())
                 fp.close()
 
                 # Define the image's ID as referenced above
-                msgImage.add_header('Content-ID', os.path.splitext(image)[0])
+                msgImage.add_header('Content-ID', os.path.splitext(os.path.basename(image))[0])
                 message.attach(msgImage)
 
             self.server.sendmail(from_, to_, message.as_string())
