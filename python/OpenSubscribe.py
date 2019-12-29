@@ -185,6 +185,11 @@ class OpenSubscribe:
             part1 = MIMEText(contentTXT_, "plain")
             part2 = MIMEText(contentHTML_, "html")
 
+            # Encapsulate the plain and HTML versions of the message body in an
+            # 'alternative' part, so message agents can decide which they want to display.
+            msgAlternative = MIMEMultipart('alternative')
+            message.attach(msgAlternative)
+
             # Add HTML/plain-text parts to MIMEMultipart message
             # The email client will try to render the last part first
             message.attach(part1)
