@@ -182,8 +182,8 @@ class OpenSubscribe:
             message["Bcc"] = bcc_
 
             # Turn these into plain/html MIMEText objects
-            part1 = MIMEText(contentTXT_, "plain")
-            part2 = MIMEText(contentHTML_, "html")
+            partPlain = MIMEText(contentTXT_, "plain")
+            partHtml = MIMEText(contentHTML_, "html")
 
             # Encapsulate the plain and HTML versions of the message body in an
             # 'alternative' part, so message agents can decide which they want to display.
@@ -192,8 +192,8 @@ class OpenSubscribe:
 
             # Add HTML/plain-text parts to MIMEMultipart message
             # The email client will try to render the last part first
-            message.attach(part1)
-            message.attach(part2)
+            msgAlternative.attach(partPlain)
+            msgAlternative.attach(partHtml)
 
             self.server.sendmail(from_, to_, message.as_string())
             print("Successfully sent email from " + from_ + " to " + to_)
