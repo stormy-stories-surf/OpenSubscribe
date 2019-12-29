@@ -113,7 +113,7 @@ class OpenSubscribe:
         ccMail = ""
         bccMail = ""
 
-        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html, [])
 
     def sendUnsubscribedInfoMail(self, receipientData_):
         # get individual data from receipientData_
@@ -138,7 +138,7 @@ class OpenSubscribe:
         ccMail = ""
         bccMail = ""
 
-        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html, [])
 
 
     def sendConfirmSubscribtionMail(self, receipientData_):
@@ -169,10 +169,11 @@ class OpenSubscribe:
         toMail = mailaddress
         ccMail = ""
         bccMail = "info@stormy-stories.surf"
+        images = ['mail-templates/images/logo_small.png']
 
-        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html, images)
 
-    def sendMail(self, subject_, from_, to_, cc_, bcc_, contentTXT_, contentHTML_):
+    def sendMail(self, subject_, from_, to_, cc_, bcc_, contentTXT_, contentHTML_, images_):
         try:
             message = MIMEMultipart(subject_)
             message["Subject"] = subject_
@@ -194,6 +195,16 @@ class OpenSubscribe:
             # The email client will try to render the last part first
             msgAlternative.attach(partPlain)
             msgAlternative.attach(partHtml)
+
+            for image in images_:
+                # This example assumes the image is in the current directory
+                fp = open(image, 'rb')
+                msgImage = MIMEImage(fp.read())
+                fp.close()
+
+                # Define the image's ID as referenced above
+                msgImage.add_header('Content-ID', os.path.splitext(image)[0])
+                message.attach(msgImage)
 
             self.server.sendmail(from_, to_, message.as_string())
             print("Successfully sent email from " + from_ + " to " + to_)
