@@ -176,7 +176,9 @@ class OpenSubscribe:
 
     def sendMail(self, subject_, from_, to_, cc_, bcc_, contentTXT_, contentHTML_, images_):
         try:
-            message = MIMEMultipart(subject_)
+            # Encapsulate the plain and HTML versions of the message body in an
+            # 'alternative' part, so message agents can decide which they want to display.
+            message = MIMEMultipart('alternative')
             message["Subject"] = subject_
             message["From"] = from_
             message["To"] = to_
@@ -187,15 +189,10 @@ class OpenSubscribe:
             partPlain = MIMEText(contentTXT_, "plain")
             partHtml = MIMEText(contentHTML_, "html")
 
-            # Encapsulate the plain and HTML versions of the message body in an
-            # 'alternative' part, so message agents can decide which they want to display.
-            msgAlternative = MIMEMultipart('alternative')
-            message.attach(msgAlternative)
-
             # Add HTML/plain-text parts to MIMEMultipart message
             # The email client will try to render the last part first
-            msgAlternative.attach(partPlain)
-            msgAlternative.attach(partHtml)
+            message.attach(partPlain)
+            message.attach(partHtml)
 
             for image in images_:
                 print("image path : "+ image)
