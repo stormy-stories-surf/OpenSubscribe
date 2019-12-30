@@ -206,7 +206,11 @@ class OpenSubscribe:
                 msgImage.add_header('Content-ID', os.path.splitext(os.path.basename(image))[0])
                 message.attach(msgImage)
 
-            self.server.sendmail(from_, to_, message.as_string())
+            #self.server.sendmail(from_, to_, message.as_string())
+            # wait here for the result to be available before continuing
+            while self.server.sendmail(from_, to_, message.as_string()) is None:
+                pass
+
             print("Successfully sent email from " + from_ + " to " + to_)
 
         except Exception as e:
