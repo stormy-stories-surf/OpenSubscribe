@@ -27,11 +27,10 @@ sudo su
 git stash
 git pull
 python3 python/OpenSubscribe.py --setup
-#exit
-#mysql -u user -p < sql/setupDatabase.sql
-#sudo su
+mysql < sql/setupDatabase.sql
 cp -v php/Unsubscribe.php /var/www/html/
 cp -v php/ConfirmSubscribtion.php /var/www/html/
+cp -v php/GoTo.php /var/www/html/
 cp -v php/SubscribtionForm.php /var/www/html/wp-content/themes/radcliffe/OpenSubscribe/
 cp -v systemd/OpenSubscribeInfoMailD.service /etc/systemd/system/
 systemctl daemon-reload
