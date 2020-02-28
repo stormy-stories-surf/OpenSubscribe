@@ -25,5 +25,10 @@
   "UNSUBSCRIBE": {
     "SQL_USER" : "UnsubscribeUser",
     "SQL_PASSWORD" : "<PUT_YOUR_UNSUBSCRIBE_USER_PASSWORD_HERE>"
+  },
+
+  "UPDATE_CLICK_COUNTER": {
+    "SQL_USER" : "UpdateClickCounterUser",
+    "SQL_PASSWORD" : "<PUT_YOUR_UPDATE_CLICK_COUNTER_USER_PASSWORD_HERE>"
   }
 }

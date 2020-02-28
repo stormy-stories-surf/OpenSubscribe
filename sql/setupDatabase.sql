@@ -18,15 +18,17 @@ CREATE TABLE subscriber (
    unSubscribedMailSent boolean
 );
 
+/* table which stores the newsletter mail data */
+DROP TABLE IF EXISTS newsletterMail;
+
 CREATE TABLE newsletterMail (
    id INT AUTO_INCREMENT primary key NOT NULL,
    url text NOT NULL,
    pathTXT text NOT NULL,
    pathHTML text NOT NULL,
-   confirmationMailSent boolean,
-   subscribtionConfirmed boolean,
-   unSubscribed boolean,
-   unSubscribedMailSent boolean
+   clickCounterID text NOT NULL,
+   clickCounter INT,
+   allMailsSent boolean
 );
 
 /* table which stores the timestamp of the
@@ -43,11 +45,13 @@ DROP USER IF EXISTS 'ConfirmSubscribtionUser'@'localhost';
 DROP USER IF EXISTS 'SubscribtionFormUser'@'localhost';
 DROP USER IF EXISTS 'SendMailsUser'@'localhost';
 DROP USER IF EXISTS 'UnsubscribeUser'@'localhost';
+DROP USER IF EXISTS 'UpdateClickCounterUser'@'localhost';
 
 CREATE USER 'ConfirmSubscribtionUser'@'localhost' IDENTIFIED BY '<PUT_YOUR_CONFIRM_SUBSCRIBTION_USER_PASSWORD_HERE>';
 CREATE USER 'SubscribtionFormUser'@'localhost' IDENTIFIED BY '<PUT_YOUR_SUBSCRIBTION_FORM_USER_PASSWORD_HERE>';
 CREATE USER 'SendMailsUser'@'localhost' IDENTIFIED BY '<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>';
 CREATE USER 'UnsubscribeUser'@'localhost' IDENTIFIED BY '<PUT_YOUR_UNSUBSCRIBE_USER_PASSWORD_HERE>';
+CREATE USER 'UpdateClickCounterUser'@'localhost' IDENTIFIED BY '<PUT_YOUR_UPDATE_CLICK_COUNTER_USER_PASSWORD_HERE>';
 
 /* GRANT ACCESS TO TABLES */
 GRANT UPDATE ON OpenSubscribe.subscriber TO 'ConfirmSubscribtionUser'@'localhost';
@@ -62,3 +66,6 @@ GRANT UPDATE ON OpenSubscribe.subscriber TO 'SendMailsUser'@'localhost';
 
 GRANT UPDATE ON OpenSubscribe.subscriber TO 'UnsubscribeUser'@'localhost';
 GRANT SELECT ON OpenSubscribe.subscriber TO 'UnsubscribeUser'@'localhost';
+
+GRANT UPDATE ON OpenSubscribe.newsletterMail TO 'UpdateClickCounterUser'@'localhost';
+GRANT SELECT ON OpenSubscribe.newsletterMail TO 'UpdateClickCounterUser'@'localhost';
