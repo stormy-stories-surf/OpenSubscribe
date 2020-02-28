@@ -52,6 +52,7 @@ class OpenSubscribe:
                          "php/ConfirmSubscribtion.php",
                          "php/SubscribtionForm.php",
                          "php/Unsubscribe.php",
+                         "php/GoTo.php",
                          "python/OpenSubscribe.py",
                          "sql/setupDatabase.sql"
                          ]:
@@ -65,6 +66,7 @@ class OpenSubscribe:
             self.replaceStringInFile(filename, "<PUT_YOUR_SUBSCRIBTION_FORM_USER_PASSWORD_HERE>", subscribtionFormSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>", sendConfirmSubscribtionMailsSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_UNSUBSCRIBE_USER_PASSWORD_HERE>", unsubscribeSqlPW)
+            self.replaceStringInFile(filename, "<PUT_YOUR_UPDATE_CLICK_COUNTER_USER_PASSWORD_HERE>", upDateClickCounterSqlPW)
 
     def replaceStringInFile(self, filename, old_string, new_string):
         with fileinput.FileInput(filename, inplace=True) as file:
