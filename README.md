@@ -5,6 +5,15 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 <br />
 <img src="docs/pictures/UnderConstructionIcon.png" width="15%">
 
+## Roadmap
+
+### v0.1.0
+
+- [ ] implement GoTo.php to forward to link
+- [ ] make GoTo.php to increase counter in database
+- [ ] implement OpenSubscribe --sendNewsletter
+- [ ] test OpenSubscribe --sendNewsletter
+
 ## Setup
 ```
 sudo su
