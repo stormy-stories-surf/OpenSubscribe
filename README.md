@@ -10,7 +10,8 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 ### v0.1.0
 
 - [x] implement GoTo.php to forward to link
-- [x] make GoTo.php to increase counter in database
+- [x] make GoTo.php to incr.
+ease counter in database
 - [ ] implement OpenSubscribe --sendNewsletter
 - [ ] test OpenSubscribe --sendNewsletter
 
@@ -20,6 +21,7 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 # vX.Y.Z
 - [ ] sent newsletter automatically at a given time
 - [ ] remove hardcoded passwords from all source-code
+- [ ] add unit-test to test against logo picture cannot be found
 
 ## Setup
 ```
@@ -36,6 +38,7 @@ cp -v systemd/OpenSubscribeInfoMailD.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl restart OpenSubscribeInfoMailD.service
 systemctl status OpenSubscribeInfoMailD.service
+exit
 ```
 
 ### Install dependencies

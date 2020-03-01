@@ -28,7 +28,7 @@ function update_click_counter($clickCounterID_p) {
   $clickCounter_l = intval($clickCounter_l) + 1;
 
 	// prepare and execute update of click counter
-  $sql_l = "UPDATE newsletterMail SET clickCounter=" . $clickCounter_l " . WHERE clickCounterID=?";
+  $sql_l = "UPDATE newsletterMail SET clickCounter=" . $clickCounter_l . " WHERE clickCounterID=?";
   $pdo_l->prepare($sql_l)->execute([$clickCounterID_p]);
 
 }

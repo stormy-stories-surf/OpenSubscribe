@@ -176,7 +176,8 @@ class OpenSubscribe:
         toMail = mailaddress
         ccMail = ""
         bccMail = "info@stormy-stories.surf"
-        images = ['mail-templates/images/logo_small.png']
+        # todo : fix to relative path
+        images = ['/etc/OpenSubscribe/mail-templates/images/logo_small.png']
 
         self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html, images)
 
