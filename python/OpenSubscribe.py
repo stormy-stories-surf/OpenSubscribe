@@ -6,6 +6,7 @@ import fileinput
 import smtplib
 import ssl
 import json
+import secrets
 import mysql.connector
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -343,6 +344,31 @@ class OpenSubscribe:
             mycursor.close()
             mydb.close()
 
+    def createNewsletterMail(self, url_, path_):
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
+
+            mycursor = mydb.cursor()
+            sql = "INSERT INTO newsletterMail (url, pathTXT, pathHTML, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s, %s, %s)"
+            clickCounterID = secrets.token_hex(64)
+            val = (url_, path_ + '/newBlogPost.txt', path_ + '/newBlogPost.html', clickCounterID, 0, false)
+            mycursor.execute(sql, val)
+
+            # accept the changes
+            mydb.commit()
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mycursor.close()
+            mydb.close()
+
     def sendNewsletter(self):
         self.smtpLogin()
 
@@ -400,6 +426,19 @@ class OpenSubscribe:
             '--sendNewsletter', action='store_true',
              help='')
 
+        parser.add_argument(
+            '--createNewsletterMail', action='store_true',
+             help='Creates a new Newsletter entry in the database, ' +
+                  'which can be send afterwards.')
+
+        parser.add_argument(
+            '--url', action='store_true',
+             help='TODO ')
+
+        parser.add_argument(
+            '--path', action='store_true',
+             help='TODO ')
+
         args = parser.parse_args()
         return args
 
@@ -412,6 +451,8 @@ def main():
         s.infoMailDeamon()
     if args.sendNewsletter:
         s.sendNewsletter()
+    if args.createNewsletterMail:
+        s.createNewsletterMail(s.url,s.path)
 
 if __name__ == '__main__':
     main()

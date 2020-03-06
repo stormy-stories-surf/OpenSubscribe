@@ -25,6 +25,7 @@ ease counter in database
 
 ## Setup
 ```
+cd /etc/OpenSubscribe/
 sudo su
 git stash
 git pull
