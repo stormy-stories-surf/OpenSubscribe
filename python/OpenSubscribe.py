@@ -476,6 +476,10 @@ class OpenSubscribe:
             mydb.close()
             return myresult
 
+    def sendAllPreparedNewsletters(self):
+        #todo continue here
+        #select id, subscriber.id from sentNewsletterMailsLog where sent = 0 JOIN subscriber where subscriber.id = subscriberID;
+
     def sendNewsletterDEPRECATED(self):
         self.smtpLogin()
 
