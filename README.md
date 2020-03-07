@@ -12,12 +12,13 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 - [x] implement GoTo.php to forward to link
 - [x] make GoTo.php to increase counter in database
 - [x] implement --prepareNewsletter
+- [x] add newsletter-entry table to log which mails are sent
 - [ ] implement OpenSubscribe --sendNewsletter
 - [ ] test OpenSubscribe --sendNewsletter
 - [ ] get newsletterMailID from insert
 
 # v0.2.0
-- [ ] add newsletter-entry table to log which mails are sent
+
 
 # vX.Y.Z
 - [ ] sent newsletter automatically at a given time
