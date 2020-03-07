@@ -31,6 +31,16 @@ CREATE TABLE newsletterMail (
    allMailsSent boolean
 );
 
+/* table which stores which newsletter mails are already send */
+DROP TABLE IF EXISTS sentNewsletterMailsLog;
+
+CREATE TABLE sentNewsletterMailsLog (
+   id INT AUTO_INCREMENT primary key NOT NULL,
+   newsletterMailID INT NOT NULL,
+   subscriberID, INT NOT NULL,
+   sent boolean
+);
+
 /* table which stores the timestamp of the
    last subscribtion to avoid DDOS */
 DROP TABLE IF EXISTS lastSubscribtion;
@@ -63,6 +73,11 @@ GRANT SELECT ON OpenSubscribe.lastSubscribtion TO 'SubscribtionFormUser'@'localh
 
 GRANT SELECT ON OpenSubscribe.subscriber TO 'SendMailsUser'@'localhost';
 GRANT UPDATE ON OpenSubscribe.subscriber TO 'SendMailsUser'@'localhost';
+GRANT SELECT ON OpenSubscribe.newsletterMail TO 'SendMailsUser'@'localhost';
+GRANT INSERT ON OpenSubscribe.newsletterMail TO 'SendMailsUser'@'localhost';
+GRANT SELECT ON OpenSubscribe.sentNewsletterMailsLog TO 'SendMailsUser'@'localhost';
+GRANT INSERT ON OpenSubscribe.sentNewsletterMailsLog TO 'SendMailsUser'@'localhost';
+GRANT UPDATE ON OpenSubscribe.sentNewsletterMailsLog TO 'SendMailsUser'@'localhost';
 
 GRANT UPDATE ON OpenSubscribe.subscriber TO 'UnsubscribeUser'@'localhost';
 GRANT SELECT ON OpenSubscribe.subscriber TO 'UnsubscribeUser'@'localhost';

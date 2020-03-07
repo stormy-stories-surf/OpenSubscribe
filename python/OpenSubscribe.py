@@ -344,6 +344,60 @@ class OpenSubscribe:
             mycursor.close()
             mydb.close()
 
+    def createSentNewsletterMailsLog(self, newsletterMailID_):
+        subscriberIDs = self.getSubscriberIDsWithConfirmation()
+        for subscriberID in subscriberIDs:
+            try:
+                mydb = mysql.connector.connect(
+                    host="localhost",
+                    user="SendMailsUser",
+                    passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                    database="OpenSubscribe"
+                )
+
+                mycursor = mydb.cursor()
+                sql = "INSERT INTO sentNewsletterMailsLog (newsletterMailID, subscriberID, sent) VALUES (%s, %s, %s)"
+                val = (newsletterMailID_, subscriberID, False)
+                mycursor.execute(sql, val)
+
+                # accept the changes
+                mydb.commit()
+
+            except Error as error:
+                print(error)
+
+            finally:
+                mycursor.close()
+                mydb.close()
+
+
+    def getSubscriberIDsWithConfirmation(self):
+        myresult = ""
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
+
+            mycursor = mydb.cursor()
+            mycursor.execute( "SELECT id FROM subscriber WHERE subscribtionConfirmed = 1 AND unSubscribed = 0 ")
+            myresult = mycursor.fetchall()
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mycursor.close()
+            mydb.close()
+            return myresult
+
+    def prepareNewsletter(self, url_, path_):
+        newsletterMailID = self.createNewsletterMail(url_, path_)
+        self.createSentNewsletterMailsLog(newsletterMailID)
+        return newsletterMailID
+
     def createNewsletterMail(self, url_, path_):
         try:
             mydb = mysql.connector.connect(
@@ -356,7 +410,7 @@ class OpenSubscribe:
             mycursor = mydb.cursor()
             sql = "INSERT INTO newsletterMail (url, pathTXT, pathHTML, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s, %s, %s)"
             clickCounterID = secrets.token_hex(64)
-            val = (url_, path_ + '/newBlogPost.txt', path_ + '/newBlogPost.html', clickCounterID, 0, false)
+            val = (url_, path_ + '/newBlogPost.txt', path_ + '/newBlogPost.html', clickCounterID, 0, False)
             mycursor.execute(sql, val)
 
             # accept the changes
@@ -368,8 +422,57 @@ class OpenSubscribe:
         finally:
             mycursor.close()
             mydb.close()
+            return self.getNewsletterMailID(url_, path_)
 
-    def sendNewsletter(self):
+    # todo : try to get this already from insert
+    def getNewsletterMailID(self, url_, path_):
+        myresult = ""
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
+
+            mycursor = mydb.cursor()
+            sql = "SELECT id FROM newsletterMail WHERE url = %s AND path = %s "
+            val = (url_, path_)
+            mycursor.execute(sql, val)
+
+            myresult = mycursor.fetchall()
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mycursor.close()
+            mydb.close()
+            return myresult[0]
+
+    def getUnsubscribedMailAddresses(self):
+        myresult = ""
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
+
+            mycursor = mydb.cursor()
+            mycursor.execute( "SELECT id, mailaddress, subscribeID, unsubscribeID FROM subscriber WHERE unSubscribed = 1 AND unSubscribedMailSent = 0 ")
+            myresult = mycursor.fetchall()
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mycursor.close()
+            mydb.close()
+            return myresult
+
+    def sendNewsletterDEPRECATED(self):
         self.smtpLogin()
 
         try:
@@ -427,7 +530,7 @@ class OpenSubscribe:
              help='')
 
         parser.add_argument(
-            '--createNewsletterMail', action='store_true',
+            '--prepareNewsletter', action='store_true',
              help='Creates a new Newsletter entry in the database, ' +
                   'which can be send afterwards.')
 
@@ -451,8 +554,8 @@ def main():
         s.infoMailDeamon()
     if args.sendNewsletter:
         s.sendNewsletter()
-    if args.createNewsletterMail:
-        s.createNewsletterMail(s.url,s.path)
+    if args.prepareNewsletter:
+        s.prepareNewsletter(s.url,s.path)
 
 if __name__ == '__main__':
     main()
