@@ -37,7 +37,7 @@ DROP TABLE IF EXISTS sentNewsletterMailsLog;
 CREATE TABLE sentNewsletterMailsLog (
    id INT AUTO_INCREMENT primary key NOT NULL,
    newsletterMailID INT NOT NULL,
-   subscriberID, INT NOT NULL,
+   subscriberID INT NOT NULL,
    sent boolean
 );
 

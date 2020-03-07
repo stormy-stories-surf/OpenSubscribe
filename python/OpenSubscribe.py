@@ -6,7 +6,8 @@ import fileinput
 import smtplib
 import ssl
 import json
-import secrets
+# todo
+#import secrets
 import mysql.connector
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -346,6 +347,8 @@ class OpenSubscribe:
 
     def createSentNewsletterMailsLog(self, newsletterMailID_):
         subscriberIDs = self.getSubscriberIDsWithConfirmation()
+        print("**** subscriberIDs")
+        print(subscriberIDs)
         for subscriberID in subscriberIDs:
             try:
                 mydb = mysql.connector.connect(
@@ -357,7 +360,7 @@ class OpenSubscribe:
 
                 mycursor = mydb.cursor()
                 sql = "INSERT INTO sentNewsletterMailsLog (newsletterMailID, subscriberID, sent) VALUES (%s, %s, %s)"
-                val = (newsletterMailID_, subscriberID, False)
+                val = (newsletterMailID_, subscriberID[0], False)
                 mycursor.execute(sql, val)
 
                 # accept the changes
@@ -409,7 +412,8 @@ class OpenSubscribe:
 
             mycursor = mydb.cursor()
             sql = "INSERT INTO newsletterMail (url, pathTXT, pathHTML, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s, %s, %s)"
-            clickCounterID = secrets.token_hex(64)
+            # todo
+            clickCounterID = "secrets.token_hex(64)"
             val = (url_, path_ + '/newBlogPost.txt', path_ + '/newBlogPost.html', clickCounterID, 0, False)
             mycursor.execute(sql, val)
 
@@ -436,8 +440,8 @@ class OpenSubscribe:
             )
 
             mycursor = mydb.cursor()
-            sql = "SELECT id FROM newsletterMail WHERE url = %s AND path = %s "
-            val = (url_, path_)
+            sql = "SELECT id FROM newsletterMail WHERE url = %s AND pathTXT = %s "
+            val = (url_, path_ + '/newBlogPost.txt')
             mycursor.execute(sql, val)
 
             myresult = mycursor.fetchall()
@@ -448,7 +452,7 @@ class OpenSubscribe:
         finally:
             mycursor.close()
             mydb.close()
-            return myresult[0]
+            return myresult[0][0]
 
     def getUnsubscribedMailAddresses(self):
         myresult = ""
@@ -555,7 +559,11 @@ def main():
     if args.sendNewsletter:
         s.sendNewsletter()
     if args.prepareNewsletter:
-        s.prepareNewsletter(s.url,s.path)
+        # todo
+        url="testURL"
+        path="testPATH"
+        s.prepareNewsletter(url,path)
+        #s.prepareNewsletter(s.url,s.path)
 
 if __name__ == '__main__':
     main()
