@@ -6,8 +6,8 @@ import fileinput
 import smtplib
 import ssl
 import json
-# todo
-#import secrets
+import secrets
+import string
 import mysql.connector
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -412,8 +412,7 @@ class OpenSubscribe:
 
             mycursor = mydb.cursor()
             sql = "INSERT INTO newsletterMail (url, pathTXT, pathHTML, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s, %s, %s)"
-            # todo
-            clickCounterID = "secrets.token_hex(64)"
+            clickCounterID = secrets.token_hex(64)
             val = (url_, path_ + '/newBlogPost.txt', path_ + '/newBlogPost.html', clickCounterID, 0, False)
             mycursor.execute(sql, val)
 
@@ -479,6 +478,7 @@ class OpenSubscribe:
     def sendAllPreparedNewsletters(self):
         #todo continue here
         #select id, subscriber.id from sentNewsletterMailsLog where sent = 0 JOIN subscriber where subscriber.id = subscriberID;
+        print("TODO")
 
     def sendNewsletterDEPRECATED(self):
         self.smtpLogin()
@@ -543,11 +543,11 @@ class OpenSubscribe:
                   'which can be send afterwards.')
 
         parser.add_argument(
-            '--url', action='store_true',
+            '--url', action='store', dest="url",
              help='TODO ')
 
         parser.add_argument(
-            '--path', action='store_true',
+            '--path',
              help='TODO ')
 
         args = parser.parse_args()
@@ -564,10 +564,12 @@ def main():
         s.sendNewsletter()
     if args.prepareNewsletter:
         # todo
-        url="testURL"
-        path="testPATH"
-        s.prepareNewsletter(url,path)
-        #s.prepareNewsletter(s.url,s.path)
+        #url="testURL"
+        #path="testPATH"
+        #s.prepareNewsletter(url,path)
+        print(s.url)
+        print(s.path)
+        s.prepareNewsletter(s.url,s.path)
 
 if __name__ == '__main__':
     main()

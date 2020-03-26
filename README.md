@@ -27,6 +27,7 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 
 ## Setup
 ```
+pip3 install python-secrets
 cd /etc/OpenSubscribe/
 sudo su
 git stash
