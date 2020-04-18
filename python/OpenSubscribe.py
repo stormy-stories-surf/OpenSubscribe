@@ -178,8 +178,10 @@ class OpenSubscribe:
         toMail = mailaddress
         ccMail = ""
         bccMail = "info@stormy-stories.surf"
+        # todo : remove
         # todo : fix to relative path
-        images = ['/etc/OpenSubscribe/mail-templates/images/logo_small.png']
+        #images = ['/etc/OpenSubscribe/mail-templates/images/logo_small.png']
+        images = []
 
         self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html, images)
 
@@ -203,6 +205,7 @@ class OpenSubscribe:
             message.attach(partPlain)
             message.attach(partHtml)
 
+            # todo : remove
             for image in images_:
                 print("image path : "+ image)
                 print("image file name " + os.path.splitext(os.path.basename(image))[0])
