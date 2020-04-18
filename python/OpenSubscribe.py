@@ -400,6 +400,8 @@ class OpenSubscribe:
             return myresult
 
     def prepareNewsletter(self, url_, path_):
+        print(url_)
+        print(path_)
         newsletterMailID = self.createNewsletterMail(url_, path_)
         self.createSentNewsletterMailsLog(newsletterMailID)
         return newsletterMailID
@@ -526,6 +528,17 @@ class OpenSubscribe:
 
     def parseArgs(self):
         parser = argparse.ArgumentParser()
+
+        subparsers = parser.add_subparsers()
+
+        prepareNewsletter_parser = subparsers.add_parser('--prepareNewsletter', aliases=['pN'],
+                                   help='Creates a new Newsletter entry in the database, ' +
+                                        'which can be send afterwards.')
+
+        prepareNewsletter_parser.set_defaults(func=prepareNewsletter)
+        prepareNewsletter_parser.add_argument('--url', help='TODO')
+
+
         parser.add_argument(
             '--setup', action='store_true',
              help='Setup OpenSubscribe with options set in config.json')
@@ -540,18 +553,18 @@ class OpenSubscribe:
             '--sendNewsletter', action='store_true',
              help='')
 
-        parser.add_argument(
-            '--prepareNewsletter', action='store_true',
-             help='Creates a new Newsletter entry in the database, ' +
-                  'which can be send afterwards.')
+        #parser.add_argument(
+        #    '--prepareNewsletter', action='store_true',
+        #     help='Creates a new Newsletter entry in the database, ' +
+        #          'which can be send afterwards.')
 
-        parser.add_argument(
-            '--url', action='store', dest="url",
-             help='TODO ')
+        #parser.add_argument(
+        #    '--url', action='store', dest="url",
+        #     help='TODO ')
 
-        parser.add_argument(
-            '--path',
-             help='TODO ')
+        #parser.add_argument(
+        #    '--path',
+        #     help='TODO ')
 
         args = parser.parse_args()
         return args
@@ -559,20 +572,19 @@ class OpenSubscribe:
 def main():
     s = OpenSubscribe()
     args = s.parseArgs()
+
     if args.setup:
         s.setup("config/config_stormy_stories.json")
     if args.infoMailD:
         s.infoMailDeamon()
     if args.sendNewsletter:
         s.sendNewsletter()
-    if args.prepareNewsletter:
-        # todo
-        #url="testURL"
-        #path="testPATH"
-        #s.prepareNewsletter(url,path)
-        print(s.url)
-        print(s.path)
-        s.prepareNewsletter(s.url,s.path)
+
+    if hasattr(args, 'func') and args.func:
+        args.func(args)
+    else:
+        print("Missing sub-command. See help")
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()

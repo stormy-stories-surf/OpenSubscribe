@@ -38,7 +38,8 @@
                     <p>You will from now on automatically receive a mail, when we publish a new post.</p>
                     <p>Click <a href="https://stormy-stories.surf" style="color: #000000;"><font color="#000000">here<font/></a> to directly start reading!</p>
                     <p><br/></p>
-                    <p>Thanks a lot for your interest, your stormy-stories team!</p>
+                    <p>Thanks a lot for your interest!</p>
+										<p>Your stormy-stories team!</p>
                     <p><br/></p>
                     <p>-------------------------------------------------------------------------------------------------------------------</p>
                     <p><br/></p>
@@ -46,7 +47,8 @@
                     <p>Ab sofort wirst du automatisch per Mail über unsere neuen Beiträge benachrichtigt.</p>
                     <p>Klicke <a href="https://stormy-stories.surf" style="color: #000000;"><font color="#000000">hier<font/></a> um direkt zu unserem Blog zu kommen!</p>
                     <p><br/></p>
-                    <p>Vielen Dank für dein Interesse, dein stormy-stories Team!</p>
+                    <p>Vielen Dank für dein Interesse!</p>
+										<p>Dein stormy-stories Team!</p>
                     <p><br/></p>
                 </td>
             </tr>
@@ -95,4 +97,3 @@ if ($_GET["data"] != "") {
 
 ?>
 </html>
-
