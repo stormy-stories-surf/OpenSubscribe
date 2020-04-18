@@ -532,6 +532,37 @@ class OpenSubscribe:
 
         subparsers = parser.add_subparsers()
 
+        # --------------------------
+
+        setup_parser = subparsers.add_parser('setup',
+                                   help='Setup OpenSubscribe with options set in config.json')
+
+
+        setup_parser.set_defaults(func=self.setup)
+
+        # --------------------------
+
+        infoMailD_parser = subparsers.add_parser('infoMailD',
+                                   help='Runs a never ending service that sends confirm-subscribtion ' +
+                                        'mails for every new subscribtion and info mails for every '+
+                                        'new confirmed mail address and every unsubscribed mail address')
+
+
+        infoMailD_parser.set_defaults(func=self.infoMailDeamon())
+
+        # --------------------------
+
+        sendNewsletter_parser = subparsers.add_parser('sendNewsletter',
+                                   help='Runs a never ending service that sends confirm-subscribtion ' +
+                                        'mails for every new subscribtion and info mails for every '+
+                                        'new confirmed mail address and every unsubscribed mail address')
+
+
+        sendNewsletter_parser.set_defaults(func=self.sendNewsletter())
+
+
+        # --------------------------
+
         prepareNewsletter_parser = subparsers.add_parser('--prepareNewsletter', aliases=['pN'],
                                    help='Creates a new Newsletter entry in the database, ' +
                                         'which can be send afterwards.')
@@ -541,19 +572,19 @@ class OpenSubscribe:
         prepareNewsletter_parser.add_argument('--url', help='TODO')
 
 
-        parser.add_argument(
-            '--setup', action='store_true',
-             help='Setup OpenSubscribe with options set in config.json')
+        #parser.add_argument(
+        #    '--setup', action='store_true',
+        #     help='Setup OpenSubscribe with options set in config.json')
 
-        parser.add_argument(
-            '--infoMailD', action='store_true',
-             help='Runs a never ending service that sends confirm-subscribtion ' +
-                  'mails for every new subscribtion and info mails for every '+
-                  'new confirmed mail address and every unsubscribed mail address')
+        #parser.add_argument(
+        #    '--infoMailD', action='store_true',
+        #     help='Runs a never ending service that sends confirm-subscribtion ' +
+        #          'mails for every new subscribtion and info mails for every '+
+        #          'new confirmed mail address and every unsubscribed mail address')
 
-        parser.add_argument(
-            '--sendNewsletter', action='store_true',
-             help='')
+        #parser.add_argument(
+        #    '--sendNewsletter', action='store_true',
+        #     help='')
 
         #parser.add_argument(
         #    '--prepareNewsletter', action='store_true',
@@ -575,12 +606,12 @@ def main():
     s = OpenSubscribe()
     args = s.parseArgs()
 
-    if args.setup:
-        s.setup("config/config_stormy_stories.json")
-    if args.infoMailD:
-        s.infoMailDeamon()
-    if args.sendNewsletter:
-        s.sendNewsletter()
+    #if args.setup:
+    #    s.setup("config/config_stormy_stories.json")
+    #if args.infoMailD:
+    #    s.infoMailDeamon()
+    #if args.sendNewsletter:
+    #    s.sendNewsletter()
 
     if hasattr(args, 'func') and args.func:
         args.func(args)
