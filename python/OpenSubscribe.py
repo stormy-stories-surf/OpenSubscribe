@@ -535,7 +535,8 @@ class OpenSubscribe:
                                    help='Creates a new Newsletter entry in the database, ' +
                                         'which can be send afterwards.')
 
-        prepareNewsletter_parser.set_defaults(func=prepareNewsletter)
+
+        prepareNewsletter_parser.set_defaults(func=self.prepareNewsletter)
         prepareNewsletter_parser.add_argument('--url', help='TODO')
 
 
