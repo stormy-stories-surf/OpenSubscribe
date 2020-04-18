@@ -538,7 +538,7 @@ class OpenSubscribe:
                                    help='Setup OpenSubscribe with options set in config.json')
 
 
-        setup_parser.set_defaults(func=self.setup)
+        setup_parser.set_defaults(func=self.setup("config/config_stormy_stories.json"))
 
         # --------------------------
 
