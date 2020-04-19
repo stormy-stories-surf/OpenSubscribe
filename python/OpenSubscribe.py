@@ -49,9 +49,10 @@ class SQLWrapper:
     def getStatementTypeFromSQLQuery(self, sqlQuery_):
         statementType = sqlQuery_.partition(' ')[0]
         statementType = statementType.upper()
-        if statementType == "":
+        allowedStatements = ["SELECT", "INSERT", "UPDATE"]
+        if not statementType in allowedStatements :
             print("Error the given sql-query '{}' does not include any of the know sql-statement types. "
-                  "Please use either 'insert' or 'select' as the first word of your sql-query!".format(sqlQuery_))
+                  "Please use one of the following statements as the first word of your sql-query : {}!".format(sqlQuery_, allowedStatements))
 
         return statementType
 
@@ -68,7 +69,7 @@ class SQLWrapper:
             mysqlCursor = self.mysqlConnector.cursor()
             mysqlCursor.execute(sqlQuery_, sqlValues_)
 
-            if statementType == "INSERT":
+            if statementType == "INSERT" or statementType == "UPDATE":
                 self.mysqlConnector.commit()
             elif statementType == "SELECT":
                 result = mysqlCursor.fetchall()
@@ -88,11 +89,15 @@ class SQLWrapper:
     def select(self, sqlQuery_, sqlValues_):
         return self.executeSQLStatement(sqlQuery_, sqlValues_)
 
+    def update(self, sqlQuery_, sqlValues_):
+        self.executeSQLStatement(sqlQuery_, sqlValues_)
+        print("Successfully updated query {} with values {}".format(sqlQuery_, sqlValues_))
+
     def __del__(self):
         self.close()
 
 class Newsletter:
-    def __init__(self, path, url, configFileName = "config/config.json"):
+    def __init__(self, url, path, configFileName = "config/config.json"):
         self.path = path
         self.pathTXT = self.path + '/newBlogPost.txt'
         self.pathHTML = self.path + '/newBlogPost.html'
@@ -398,125 +403,48 @@ class OpenSubscribe:
         return sqlWrapper.select(sqlQuery, sqlValues)
 
     def getMailAddressesWithoutConfirmation(self):
-        sqlQuery = "SELECT id, mailaddress, subscribeID, unsubscribeID FROM subscriber WHERE confirmationMailSent = 0 "
+        sqlQuery = "SELECT id, mailaddress, subscribeID, unsubscribeID FROM subscriber WHERE confirmationMailSent = 0"
         sqlValues = ()
         sqlWrapper = SQLWrapper(self.configFileName)
         return sqlWrapper.select(sqlQuery, sqlValues)
 
+    # todo : test
     def updateUnSubscribedMailSent(self, id_):
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
+        sqlQuery = "UPDATE subscriber SET mailaddress = '', unSubscribedMailSent = 1 WHERE id = %s"
+        sqlValues = (id_,)
+        sqlWrapper = SQLWrapper(self.configFileName)
+        sqlWrapper.update(sqlQuery, sqlValues)
 
-            mycursor = mydb.cursor()
-            query = "UPDATE subscriber SET mailaddress = '', unSubscribedMailSent = 1 WHERE id = %s"
-            mycursor.execute(query, (id_,))
-
-            # accept the changes
-            mydb.commit()
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
-
+    # todo : test
     def updateConfirmationMailSent(self,subscriberID_):
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
-
-            mycursor = mydb.cursor()
-            query = "UPDATE subscriber SET confirmationMailSent = 1 WHERE id = %s"
-            mycursor.execute(query, (subscriberID_,))
-
-            # accept the changes
-            mydb.commit()
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
+        sqlQuery = "UPDATE subscriber SET confirmationMailSent = 1 WHERE id = %s"
+        sqlValues = (subscriberID_,)
+        sqlWrapper = SQLWrapper(self.configFileName)
+        sqlWrapper.update(sqlQuery, sqlValues)
 
     def createNewsletterMail(self, newsletterID_):
         subscriberIDs = self.getSubscriberIDsWithConfirmation()
         for subscriberID in subscriberIDs:
-            try:
-                mydb = mysql.connector.connect(
-                    host="localhost",
-                    user="SendMailsUser",
-                    passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                    database="OpenSubscribe"
-                )
-
-                mycursor = mydb.cursor()
-                sql = "INSERT INTO newsletterMail (newsletterID, subscriberID, sent) VALUES (%s, %s, %s)"
-                val = (newsletterID_, subscriberID[0], False)
-                mycursor.execute(sql, val)
-
-                # accept the changes
-                mydb.commit()
-
-                print("Successfully created newsletterMail for newsletterID {} and subscriberID {}.".format(newsletterID_, subscriberID[0]))
-
-            except Error as error:
-                print(error)
-
-            finally:
-                mycursor.close()
-                mydb.close()
-
+            sqlQuery = "INSERT INTO newsletterMail (newsletterID, subscriberID, sent) VALUES (%s, %s, %s)"
+            sqlValues = (newsletterID_, subscriberID[0], False)
+            sqlWrapper = SQLWrapper(self.configFileName)
+            sqlWrapper.insert(sqlQuery, sqlValues)
+            print("Successfully created newsletterMail for newsletterID {} and subscriberID {}.".format(newsletterID_, subscriberID[0]))
 
     def getSubscriberIDsWithConfirmation(self):
-        myresult = ""
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
+        sqlQuery = "SELECT id FROM subscriber WHERE subscribtionConfirmed = 1 AND unSubscribed = 0 "
+        sqlValues = ()
+        sqlWrapper = SQLWrapper(self.configFileName)
+        return sqlWrapper.select(sqlQuery, sqlValues)
 
-            mycursor = mydb.cursor()
-            mycursor.execute( "SELECT id FROM subscriber WHERE subscribtionConfirmed = 1 AND unSubscribed = 0 ")
-            myresult = mycursor.fetchall()
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
-            return myresult
-
+    # todo : test
     def prepareNewsletter(self, args):
         newsletter = Newsletter(args.url, args.path, args.configFileName)
         self.createNewsletterMail(newsletter.getID())
         print("Successfully prepared database entries for newsletter with ID {} for url {} and path {}.".format(newsletter.getID(), args.url, args.path))
 
     def sendAllPreparedNewsletters(self, args):
-        myresult=""
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
-
-            mycursor = mydb.cursor()
-            sql="SELECT newsletterMail.id AS logID, " \
+        sqlQuery = "SELECT newsletterMail.id AS logID, " \
                 "newsletterMail.newsletterID, " \
                 "newsletter.url, " \
                 "newsletter.pathHTML, " \
@@ -528,32 +456,13 @@ class OpenSubscribe:
                 "FROM ((newsletterMail " \
                 "INNER JOIN subscriber ON newsletterMail.subscriberID = subscriber.id) " \
                 "INNER JOIN newsletter ON newsletterMail.newsletterID = newsletter.id);"
-
-            mycursor.execute(sql)
-            myresult = mycursor.fetchall()
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
+        sqlValues = ()
+        sqlWrapper = SQLWrapper(self.configFileName)
+        myresult = sqlWrapper.select(sqlQuery, sqlValues)
 
         for mail in myresult:
             newsletterMail = NewsletterMail(mail)
             newsletterMail.toString()
-            #print(mail)
-            #url = mail[2]
-            #pathHTML = mail[3]
-            #pathTXT = mail[4]
-            #clickCounterID = mail[5]
-            #mailaddress = mail[7]
-            #unsubscribeID = mail[8]
-
-            #print("Sent mail with url {} to mailaddress {}".format(url, mailaddress))
-
-        print(myresult)
-        print("TODO")
 
     def sendNewsletterDEPRECATED(self):
         self.smtpLogin()
