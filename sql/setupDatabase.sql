@@ -19,9 +19,9 @@ CREATE TABLE subscriber (
 );
 
 /* table which stores the newsletter mail data */
-DROP TABLE IF EXISTS newsletterMail;
+DROP TABLE IF EXISTS newsletter;
 
-CREATE TABLE newsletterMail (
+CREATE TABLE newsletter (
    id INT AUTO_INCREMENT primary key NOT NULL,
    url text NOT NULL,
    pathTXT text NOT NULL,
@@ -32,11 +32,11 @@ CREATE TABLE newsletterMail (
 );
 
 /* table which stores which newsletter mails are already send */
-DROP TABLE IF EXISTS sentNewsletterMailsLog;
+DROP TABLE IF EXISTS newsletterMail;
 
-CREATE TABLE sentNewsletterMailsLog (
+CREATE TABLE newsletterMail (
    id INT AUTO_INCREMENT primary key NOT NULL,
-   newsletterMailID INT NOT NULL,
+   newsletterID INT NOT NULL,
    subscriberID INT NOT NULL,
    sent boolean
 );
@@ -73,14 +73,14 @@ GRANT SELECT ON OpenSubscribe.lastSubscribtion TO 'SubscribtionFormUser'@'localh
 
 GRANT SELECT ON OpenSubscribe.subscriber TO 'SendMailsUser'@'localhost';
 GRANT UPDATE ON OpenSubscribe.subscriber TO 'SendMailsUser'@'localhost';
+GRANT SELECT ON OpenSubscribe.newsletter TO 'SendMailsUser'@'localhost';
+GRANT INSERT ON OpenSubscribe.newsletter TO 'SendMailsUser'@'localhost';
 GRANT SELECT ON OpenSubscribe.newsletterMail TO 'SendMailsUser'@'localhost';
 GRANT INSERT ON OpenSubscribe.newsletterMail TO 'SendMailsUser'@'localhost';
-GRANT SELECT ON OpenSubscribe.sentNewsletterMailsLog TO 'SendMailsUser'@'localhost';
-GRANT INSERT ON OpenSubscribe.sentNewsletterMailsLog TO 'SendMailsUser'@'localhost';
-GRANT UPDATE ON OpenSubscribe.sentNewsletterMailsLog TO 'SendMailsUser'@'localhost';
+GRANT UPDATE ON OpenSubscribe.newsletterMail TO 'SendMailsUser'@'localhost';
 
 GRANT UPDATE ON OpenSubscribe.subscriber TO 'UnsubscribeUser'@'localhost';
 GRANT SELECT ON OpenSubscribe.subscriber TO 'UnsubscribeUser'@'localhost';
 
-GRANT UPDATE ON OpenSubscribe.newsletterMail TO 'UpdateClickCounterUser'@'localhost';
-GRANT SELECT ON OpenSubscribe.newsletterMail TO 'UpdateClickCounterUser'@'localhost';
+GRANT UPDATE ON OpenSubscribe.newsletter TO 'UpdateClickCounterUser'@'localhost';
+GRANT SELECT ON OpenSubscribe.newsletter TO 'UpdateClickCounterUser'@'localhost';

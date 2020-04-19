@@ -18,7 +18,7 @@ function update_click_counter($clickCounterID_p) {
 
   // get current click counter
   $clickCounter_l = 0;
-  $statement_l = $pdo_l->prepare("SELECT clickCounter FROM newsletterMail WHERE clickCounterID = ?");
+  $statement_l = $pdo_l->prepare("SELECT clickCounter FROM newsletter WHERE clickCounterID = ?");
   $statement_l->execute(array($clickCounterID_p));
   while($row_l = $statement_l->fetch()) {
      $clickCounter_l = $row_l['clickCounter'];
@@ -28,7 +28,7 @@ function update_click_counter($clickCounterID_p) {
   $clickCounter_l = intval($clickCounter_l) + 1;
 
 	// prepare and execute update of click counter
-  $sql_l = "UPDATE newsletterMail SET clickCounter=" . $clickCounter_l . " WHERE clickCounterID=?";
+  $sql_l = "UPDATE newsletter SET clickCounter=" . $clickCounter_l . " WHERE clickCounterID=?";
   $pdo_l->prepare($sql_l)->execute([$clickCounterID_p]);
 
 }

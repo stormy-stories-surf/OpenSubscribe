@@ -14,10 +14,77 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 
+class Newsletter:
+    def __init__(self, path, url):
+        self.path = path
+        self.pathTXT = self.path + '/newBlogPost.txt'
+        self.pathHTML = self.path + '/newBlogPost.html'
+        self.url = url
+        self.clickCounterID = secrets.token_hex(64)
+        self.creatNewsletterInDatabase()
+        self.ID = self.getIDFromDatabase()
+
+    def creatNewsletterInDatabase(self):
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
+
+            mycursor = mydb.cursor()
+            sql = "INSERT INTO newsletter (url, pathTXT, pathHTML, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s, %s, %s)"
+
+            val = (self.url, self.pathTXT, self.pathHTML, self.clickCounterID, 0, False)
+            mycursor.execute(sql, val)
+
+            # accept the changes
+            mydb.commit()
+
+            print("Successfully created newsletter for url {}, pathTXT {} and pathHTML {}.".format(self.url, self.pathTXT, self.pathHTML))
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mycursor.close()
+            mydb.close()
+
+    # todo : try to get this already from insert
+    def getIDFromDatabase(self):
+        myresult = ""
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
+
+            mycursor = mydb.cursor()
+            sql = "SELECT id FROM newsletter WHERE url = %s AND pathTXT = %s "
+            val = (self.url, self.pathTXT)
+            mycursor.execute(sql, val)
+
+            myresult = mycursor.fetchall()
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mycursor.close()
+            mydb.close()
+            return myresult[0][0]
+
+    def getID(self):
+        return self.ID
+
+
 class NewsletterMail:
     def __init__(self, sqlResult):
         self.logID            = sqlResult[0]
-        self.newsletterMailID = sqlResult[1]
+        self.newsletterID     = sqlResult[1]
         self.url              = sqlResult[2]
         self.pathHTML         = sqlResult[3]
         self.pathTXT          = sqlResult[4]
@@ -29,7 +96,7 @@ class NewsletterMail:
     def toString(self):
         print("-----------------------------")
         print("logID : {}".format(self.logID))
-        print("newsletterMailID : {}".format(self.newsletterMailID))
+        print("newsletterID : {}".format(self.newsletterID))
         print("-----------------------------")
         print("url : {}".format(self.url))
         print("pathHTML : {}".format(self.pathHTML))
@@ -375,7 +442,7 @@ class OpenSubscribe:
             mycursor.close()
             mydb.close()
 
-    def createSentNewsletterMailsLog(self, newsletterMailID_):
+    def createNewsletterMail(self, newsletterID_):
         subscriberIDs = self.getSubscriberIDsWithConfirmation()
         for subscriberID in subscriberIDs:
             try:
@@ -387,14 +454,14 @@ class OpenSubscribe:
                 )
 
                 mycursor = mydb.cursor()
-                sql = "INSERT INTO sentNewsletterMailsLog (newsletterMailID, subscriberID, sent) VALUES (%s, %s, %s)"
-                val = (newsletterMailID_, subscriberID[0], False)
+                sql = "INSERT INTO newsletterMail (newsletterID, subscriberID, sent) VALUES (%s, %s, %s)"
+                val = (newsletterID_, subscriberID[0], False)
                 mycursor.execute(sql, val)
 
                 # accept the changes
                 mydb.commit()
 
-                print("Successfully created Newsletter Send log for newsletterMailID {} and subscriberID {}.".format(newsletterMailID_, subscriberID[0]))
+                print("Successfully created newsletterMail for newsletterID {} and subscriberID {}.".format(newsletterID_, subscriberID[0]))
 
             except Error as error:
                 print(error)
@@ -427,64 +494,9 @@ class OpenSubscribe:
             return myresult
 
     def prepareNewsletter(self, args):
-        newsletterMailID = self.createNewsletterMail(args.url, args.path)
-        self.createSentNewsletterMailsLog(newsletterMailID)
-        print("Successfully prepared database entries for Newsletter with ID {} for url {} and path {}.".format(newsletterMailID, args.url, args.path))
-        return newsletterMailID
-
-    def createNewsletterMail(self, url_, path_):
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
-
-            mycursor = mydb.cursor()
-            sql = "INSERT INTO newsletterMail (url, pathTXT, pathHTML, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s, %s, %s)"
-            clickCounterID = secrets.token_hex(64)
-            val = (url_, path_ + '/newBlogPost.txt', path_ + '/newBlogPost.html', clickCounterID, 0, False)
-            mycursor.execute(sql, val)
-
-            # accept the changes
-            mydb.commit()
-
-            print("Successfully created Newsletter for url {}, pathTXT {} and pathHTML {}.".format(url_, path_ + '/newBlogPost.txt', path_ + '/newBlogPost.html'))
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
-            return self.getNewsletterMailID(url_, path_)
-
-    # todo : try to get this already from insert
-    def getNewsletterMailID(self, url_, path_):
-        myresult = ""
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
-
-            mycursor = mydb.cursor()
-            sql = "SELECT id FROM newsletterMail WHERE url = %s AND pathTXT = %s "
-            val = (url_, path_ + '/newBlogPost.txt')
-            mycursor.execute(sql, val)
-
-            myresult = mycursor.fetchall()
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
-            return myresult[0][0]
+        newsletter = Newsletter(args.url, args.path)
+        self.createNewsletterMail(newsletter.getID())
+        print("Successfully prepared database entries for Newsletter with ID {} for url {} and path {}.".format(newsletter.getID(), args.url, args.path))
 
     def getUnsubscribedMailAddresses(self):
         myresult = ""
@@ -519,18 +531,18 @@ class OpenSubscribe:
             )
 
             mycursor = mydb.cursor()
-            sql="SELECT sentNewsletterMailsLog.id AS logID, " \
-                "sentNewsletterMailsLog.newsletterMailID, " \
-                "newsletterMail.url, " \
-                "newsletterMail.pathHTML, " \
-                "newsletterMail.pathTXT, " \
-                "newsletterMail.clickCounterID, " \
+            sql="SELECT newsletterMail.id AS logID, " \
+                "newsletterMail.newsletterID, " \
+                "newsletter.url, " \
+                "newsletter.pathHTML, " \
+                "newsletter.pathTXT, " \
+                "newsletter.clickCounterID, " \
                 "subscriber.id AS subscriberID, " \
                 "subscriber.mailaddress, " \
                 "subscriber.unsubscribeID " \
-                "FROM ((sentNewsletterMailsLog " \
-                "INNER JOIN subscriber ON sentNewsletterMailsLog.subscriberID = subscriber.id) " \
-                "INNER JOIN newsletterMail ON sentNewsletterMailsLog.newsletterMailID = newsletterMail.id);"
+                "FROM ((newsletterMail " \
+                "INNER JOIN subscriber ON newsletterMail.subscriberID = subscriber.id) " \
+                "INNER JOIN newsletter ON newsletterMail.newsletterID = newsletter.id);"
 
             mycursor.execute(sql)
             myresult = mycursor.fetchall()
