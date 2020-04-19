@@ -14,6 +14,32 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 
+class NewsletterMail:
+    def __init__(self, sqlResult):
+        self.logID            = sqlResult[0]
+        self.newsletterMailID = sqlResult[1]
+        self.url              = sqlResult[2]
+        self.pathHTML         = sqlResult[3]
+        self.pathTXT          = sqlResult[4]
+        self.clickCounterID   = sqlResult[5]
+        self.subscriberID     = sqlResult[6]
+        self.mailaddress      = sqlResult[7]
+        self.unsubscribeID    = sqlResult[8]
+
+    def toString(self):
+        print("-----------------------------")
+        print("logID : {}".format(self.logID))
+        print("newsletterMailID : {}".format(self.newsletterMailID))
+        print("-----------------------------")
+        print("url : {}".format(self.url))
+        print("pathHTML : {}".format(self.pathHTML))
+        print("pathTXT : {}".format(self.pathTXT))
+        print("clickCounterID : {}".format(self.clickCounterID))
+        print("subscriberID : {}".format(self.subscriberID))
+        print("mailaddress : {}".format(self.mailaddress))
+        print("unsubscribeID : {}".format(self.unsubscribeID))
+        print("-----------------------------")
+
 class OpenSubscribe:
     def __init__(self):
         self.sender_email = "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
@@ -21,8 +47,8 @@ class OpenSubscribe:
         self.smtp_server = "<PUT_YOUR_SMTP_SERVER_HERE>"
         self.smtp_port = "<PUT_YOUR_SMTP_PORT_HERE>"
 
-    def setup(self, configFileName_ = "config/config.json"):
-        with open(configFileName_) as json_file:
+    def setup(self, args):
+        with open(args.configFileName) as json_file:
             data = json.load(json_file)
             urlWebsite = data["URL_WEBSITE"]
             smtpServer = data["SMTP_SERVER"]
@@ -46,9 +72,6 @@ class OpenSubscribe:
             upDateClickCounterSqlUser = upDateClickCounterData["SQL_USER"]
             upDateClickCounterSqlPW = upDateClickCounterData["SQL_PASSWORD"]
 
-
-        print("Setup done")
-
         for filename in ["mail-templates/confirmSubscribtion.html",
                          "mail-templates/confirmSubscribtion.txt",
                          "mail-templates/newBlogPost.txt",
@@ -70,6 +93,9 @@ class OpenSubscribe:
             self.replaceStringInFile(filename, "<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>", sendConfirmSubscribtionMailsSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_UNSUBSCRIBE_USER_PASSWORD_HERE>", unsubscribeSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_UPDATE_CLICK_COUNTER_USER_PASSWORD_HERE>", upDateClickCounterSqlPW)
+
+        print("Setup done")
+
 
     def replaceStringInFile(self, filename, old_string, new_string):
         with fileinput.FileInput(filename, inplace=True) as file:
@@ -252,7 +278,7 @@ class OpenSubscribe:
             self.updateUnSubscribedMailSent(id)
         self.smtpClose()
 
-    def infoMailDeamon(self):
+    def infoMailDeamon(self, args):
         while (True):
             self.sendConfirmSubscribtionMails()
             self.sendUnsubscribedMails()
@@ -351,8 +377,6 @@ class OpenSubscribe:
 
     def createSentNewsletterMailsLog(self, newsletterMailID_):
         subscriberIDs = self.getSubscriberIDsWithConfirmation()
-        print("**** subscriberIDs")
-        print(subscriberIDs)
         for subscriberID in subscriberIDs:
             try:
                 mydb = mysql.connector.connect(
@@ -369,6 +393,8 @@ class OpenSubscribe:
 
                 # accept the changes
                 mydb.commit()
+
+                print("Successfully created Newsletter Send log for newsletterMailID {} and subscriberID {}.".format(newsletterMailID_, subscriberID[0]))
 
             except Error as error:
                 print(error)
@@ -400,11 +426,10 @@ class OpenSubscribe:
             mydb.close()
             return myresult
 
-    def prepareNewsletter(self, url_, path_):
-        print(url_)
-        print(path_)
-        newsletterMailID = self.createNewsletterMail(url_, path_)
+    def prepareNewsletter(self, args):
+        newsletterMailID = self.createNewsletterMail(args.url, args.path)
         self.createSentNewsletterMailsLog(newsletterMailID)
+        print("Successfully prepared database entries for Newsletter with ID {} for url {} and path {}.".format(newsletterMailID, args.url, args.path))
         return newsletterMailID
 
     def createNewsletterMail(self, url_, path_):
@@ -424,6 +449,8 @@ class OpenSubscribe:
 
             # accept the changes
             mydb.commit()
+
+            print("Successfully created Newsletter for url {}, pathTXT {} and pathHTML {}.".format(url_, path_ + '/newBlogPost.txt', path_ + '/newBlogPost.html'))
 
         except Error as error:
             print(error)
@@ -481,9 +508,54 @@ class OpenSubscribe:
             mydb.close()
             return myresult
 
-    def sendAllPreparedNewsletters(self):
-        #todo continue here
-        #select id, subscriber.id from sentNewsletterMailsLog where sent = 0 JOIN subscriber where subscriber.id = subscriberID;
+    def sendAllPreparedNewsletters(self, args):
+        myresult=""
+        try:
+            mydb = mysql.connector.connect(
+                host="localhost",
+                user="SendMailsUser",
+                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
+                database="OpenSubscribe"
+            )
+
+            mycursor = mydb.cursor()
+            sql="SELECT sentNewsletterMailsLog.id AS logID, " \
+                "sentNewsletterMailsLog.newsletterMailID, " \
+                "newsletterMail.url, " \
+                "newsletterMail.pathHTML, " \
+                "newsletterMail.pathTXT, " \
+                "newsletterMail.clickCounterID, " \
+                "subscriber.id AS subscriberID, " \
+                "subscriber.mailaddress, " \
+                "subscriber.unsubscribeID " \
+                "FROM ((sentNewsletterMailsLog " \
+                "INNER JOIN subscriber ON sentNewsletterMailsLog.subscriberID = subscriber.id) " \
+                "INNER JOIN newsletterMail ON sentNewsletterMailsLog.newsletterMailID = newsletterMail.id);"
+
+            mycursor.execute(sql)
+            myresult = mycursor.fetchall()
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mycursor.close()
+            mydb.close()
+
+        for mail in myresult:
+            newsletterMail = NewsletterMail(mail)
+            newsletterMail.toString()
+            #print(mail)
+            #url = mail[2]
+            #pathHTML = mail[3]
+            #pathTXT = mail[4]
+            #clickCounterID = mail[5]
+            #mailaddress = mail[7]
+            #unsubscribeID = mail[8]
+
+            #print("Sent mail with url {} to mailaddress {}".format(url, mailaddress))
+
+        print(myresult)
         print("TODO")
 
     def sendNewsletterDEPRECATED(self):
@@ -538,7 +610,8 @@ class OpenSubscribe:
                                    help='Setup OpenSubscribe with options set in config.json')
 
 
-        setup_parser.set_defaults(func=self.setup("config/config_stormy_stories.json"))
+        setup_parser.set_defaults(func=self.setup)
+        setup_parser.add_argument('--configFileName', default='config/config.json', help='Defines the path of the configuration json-file.')
 
         # --------------------------
 
@@ -548,7 +621,7 @@ class OpenSubscribe:
                                         'new confirmed mail address and every unsubscribed mail address')
 
 
-        infoMailD_parser.set_defaults(func=self.infoMailDeamon())
+        infoMailD_parser.set_defaults(func=self.infoMailDeamon)
 
         # --------------------------
 
@@ -558,18 +631,19 @@ class OpenSubscribe:
                                         'new confirmed mail address and every unsubscribed mail address')
 
 
-        sendNewsletter_parser.set_defaults(func=self.sendNewsletter())
+        sendNewsletter_parser.set_defaults(func=self.sendAllPreparedNewsletters)
 
 
         # --------------------------
 
-        prepareNewsletter_parser = subparsers.add_parser('--prepareNewsletter', aliases=['pN'],
+        prepareNewsletter_parser = subparsers.add_parser('prepareNewsletter', aliases=['pN'],
                                    help='Creates a new Newsletter entry in the database, ' +
                                         'which can be send afterwards.')
 
 
         prepareNewsletter_parser.set_defaults(func=self.prepareNewsletter)
         prepareNewsletter_parser.add_argument('--url', help='TODO')
+        prepareNewsletter_parser.add_argument('--path', help='TODO')
 
 
         #parser.add_argument(
@@ -621,3 +695,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
