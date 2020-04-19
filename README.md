@@ -32,7 +32,7 @@ cd /etc/OpenSubscribe/
 sudo su
 git stash
 git pull
-python3 python/OpenSubscribe.py setup --configFileName config/config_stormy_stories.json
+python3 python/OpenSubscribe.py --configFileName config/config_stormy_stories.json setup
 mysql < sql/setupDatabase.sql
 cp -v php/Unsubscribe.php /var/www/html/
 cp -v php/ConfirmSubscribtion.php /var/www/html/
