@@ -96,28 +96,31 @@ class SQLWrapper:
     def __del__(self):
         self.close()
 
+class SMTPWrapper:
+    def __init__(self):
+        print("# constructor")
+    def __del__(self):
+        print("# destructor")
+
 class Newsletter:
-    def __init__(self, url, path, configFileName = "config/config.json"):
+    def __init__(self, path, configFileName = "config/config.json"):
         self.path = path
-        self.pathTXT = self.path + '/newBlogPost.txt'
-        self.pathHTML = self.path + '/newBlogPost.html'
-        self.url = url
         self.configFileName = configFileName
         self.clickCounterID = secrets.token_hex(64)
         self.creatNewsletterInDatabase()
         self.ID = self.getIDFromDatabase()
 
     def creatNewsletterInDatabase(self):
-        sqlQuery = "INSERT INTO newsletter (url, pathTXT, pathHTML, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s, %s, %s)"
-        sqlValues = (self.url, self.pathTXT, self.pathHTML, self.clickCounterID, 0, False)
+        sqlQuery = "INSERT INTO newsletter (path, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s)"
+        sqlValues = (self.path, self.clickCounterID, 0, False)
         sqlWrapper = SQLWrapper(self.configFileName)
         sqlWrapper.insert(sqlQuery, sqlValues)
-        print("Successfully created newsletter for url {}, pathTXT {} and pathHTML {}.".format(self.url, self.pathTXT, self.pathHTML))
+        print("Successfully created newsletter for path {}.".format(self.path))
 
     #todo : try to get this already from insert
     def getIDFromDatabase(self):
-        sqlQuery = "SELECT id FROM newsletter WHERE url = %s AND pathTXT = %s"
-        sqlValues = (self.url, self.pathTXT)
+        sqlQuery = "SELECT id FROM newsletter WHERE path = %s"
+        sqlValues = (self.path,)
         sqlWrapper = SQLWrapper(self.configFileName)
         result = sqlWrapper.select(sqlQuery, sqlValues)
         return result[0][0]
@@ -125,27 +128,22 @@ class Newsletter:
     def getID(self):
         return self.ID
 
-
 class NewsletterMail:
     def __init__(self, sqlResult):
-        self.logID            = sqlResult[0]
+        self.newsletterMailID = sqlResult[0]
         self.newsletterID     = sqlResult[1]
-        self.url              = sqlResult[2]
-        self.pathHTML         = sqlResult[3]
-        self.pathTXT          = sqlResult[4]
-        self.clickCounterID   = sqlResult[5]
-        self.subscriberID     = sqlResult[6]
-        self.mailaddress      = sqlResult[7]
-        self.unsubscribeID    = sqlResult[8]
+        self.path             = sqlResult[2]
+        self.clickCounterID   = sqlResult[3]
+        self.subscriberID     = sqlResult[4]
+        self.mailaddress      = sqlResult[5]
+        self.unsubscribeID    = sqlResult[6]
 
     def toString(self):
         print("-----------------------------")
-        print("logID : {}".format(self.logID))
+        print("newsletterMailID : {}".format(self.newsletterMailID))
         print("newsletterID : {}".format(self.newsletterID))
         print("-----------------------------")
-        print("url : {}".format(self.url))
-        print("pathHTML : {}".format(self.pathHTML))
-        print("pathTXT : {}".format(self.pathTXT))
+        print("path : {}".format(self.path))
         print("clickCounterID : {}".format(self.clickCounterID))
         print("subscriberID : {}".format(self.subscriberID))
         print("mailaddress : {}".format(self.mailaddress))
@@ -317,14 +315,40 @@ class OpenSubscribe:
         toMail = mailaddress
         ccMail = ""
         bccMail = "info@stormy-stories.surf"
-        # todo : remove
-        # todo : fix to relative path
-        #images = ['/etc/OpenSubscribe/mail-templates/images/logo_small.png']
-        images = []
 
-        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html, images)
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
 
-    def sendMail(self, subject_, from_, to_, cc_, bcc_, contentTXT_, contentHTML_, images_):
+    def sendMail(self, subject_, from_, to_, cc_, bcc_, contentTXT_, contentHTML_):
+        try:
+            # Encapsulate the plain and HTML versions of the message body in an
+            # 'alternative' part, so message agents can decide which they want to display.
+            message = MIMEMultipart('alternative')
+            message["Subject"] = subject_
+            message["From"] = from_
+            message["To"] = to_
+            message["Cc"] = cc_
+            message["Bcc"] = bcc_
+
+            # Turn these into plain/html MIMEText objects
+            partPlain = MIMEText(contentTXT_, "plain")
+            partHtml = MIMEText(contentHTML_, "html")
+
+            # Add HTML/plain-text parts to MIMEMultipart message
+            # The email client will try to render the last part first
+            message.attach(partPlain)
+            message.attach(partHtml)
+
+            # wait here for the result to be available before continuing
+            while self.server.sendmail(from_, to_, message.as_string()) is None:
+                pass
+
+            print("Successfully sent email from " + from_ + " to " + to_)
+
+        except Exception as e:
+            # Print any error messages to stdout
+            print(e)
+
+    def sendMailDEPRECATED(self, subject_, from_, to_, cc_, bcc_, contentTXT_, contentHTML_, images_):
         try:
             # Encapsulate the plain and HTML versions of the message body in an
             # 'alternative' part, so message agents can decide which they want to display.
@@ -408,14 +432,12 @@ class OpenSubscribe:
         sqlWrapper = SQLWrapper(self.configFileName)
         return sqlWrapper.select(sqlQuery, sqlValues)
 
-    # todo : test
     def updateUnSubscribedMailSent(self, id_):
         sqlQuery = "UPDATE subscriber SET mailaddress = '', unSubscribedMailSent = 1 WHERE id = %s"
         sqlValues = (id_,)
         sqlWrapper = SQLWrapper(self.configFileName)
         sqlWrapper.update(sqlQuery, sqlValues)
 
-    # todo : test
     def updateConfirmationMailSent(self,subscriberID_):
         sqlQuery = "UPDATE subscriber SET confirmationMailSent = 1 WHERE id = %s"
         sqlValues = (subscriberID_,)
@@ -437,18 +459,15 @@ class OpenSubscribe:
         sqlWrapper = SQLWrapper(self.configFileName)
         return sqlWrapper.select(sqlQuery, sqlValues)
 
-    # todo : test
     def prepareNewsletter(self, args):
-        newsletter = Newsletter(args.url, args.path, args.configFileName)
+        newsletter = Newsletter(args.path, args.configFileName)
         self.createNewsletterMail(newsletter.getID())
-        print("Successfully prepared database entries for newsletter with ID {} for url {} and path {}.".format(newsletter.getID(), args.url, args.path))
+        print("Successfully prepared database entries for newsletter with ID {} for path {}.".format(newsletter.getID(), args.path))
 
     def sendAllPreparedNewsletters(self, args):
-        sqlQuery = "SELECT newsletterMail.id AS logID, " \
+        sqlQuery = "SELECT newsletterMail.id AS newsletterMailID, " \
                 "newsletterMail.newsletterID, " \
-                "newsletter.url, " \
-                "newsletter.pathHTML, " \
-                "newsletter.pathTXT, " \
+                "newsletter.path, " \
                 "newsletter.clickCounterID, " \
                 "subscriber.id AS subscriberID, " \
                 "subscriber.mailaddress, " \
@@ -463,6 +482,60 @@ class OpenSubscribe:
         for mail in myresult:
             newsletterMail = NewsletterMail(mail)
             newsletterMail.toString()
+            self.sendNewsletterMail(newsletterMail)
+
+    def sendNewsletterMail(self, newsletterMail_):
+
+        configFilePath = os.path.join(newsletterMail_.path, 'config.json')
+        with open(configFilePath) as json_file:
+            data = json.load(json_file)
+            print(data)
+            htmlFileName       = data["HTML_FILE_NAME"]
+            txtFileName        = data["TXT_FILE_NAME"]
+            logoFileName       = data["LOGO_FILE_NAME"]
+            leftImageFileName  = data["LEFT_IMAGE_FILE_NAME"]
+            rightImageFileName = data["RIGHT_IMAGE_FILE_NAME"]
+            mainUrl            = data["MAIN_URL"]
+            imageMainUrl       = data["IMAGE_MAIN_URL"]
+            targetUrlLeft      = data["TARGET_URL_LEFT"]
+            targetUrlRight     = data["TARGET_URL_RIGHT"]
+
+        htmlFilePath = os.path.join(newsletterMail_.path, htmlFileName)
+        txtFilePath  = os.path.join(newsletterMail_.path, txtFileName)
+
+        # Create the plain-text and HTML version of your message
+        with open(txtFilePath, 'r') as file:
+            text = file.read()
+            text = text.replace("<MAIN_URL>", mainUrl)
+            text = text.replace("<TARGET_URL_LEFT>", targetUrlLeft)
+            text = text.replace("<TARGET_URL_RIGHT>", targetUrlRight)
+            text = text.replace("<CLICK_COUNTER_ID>", str(newsletterMail_.clickCounterID))
+            text = text.replace("<UNSUBSCRIBE_ID>", str(newsletterMail_.unsubscribeID))
+
+        with open(htmlFilePath, 'r') as file:
+            html = file.read()
+            html = html.replace("<MAIN_URL>", mainUrl)
+            html = html.replace("<IMAGE_MAIN_URL>", imageMainUrl)
+            html = html.replace("<TARGET_URL_LEFT>", targetUrlLeft)
+            html = html.replace("<TARGET_URL_RIGHT>", targetUrlRight)
+            html = html.replace("<LOGO_FILE_NAME>", logoFileName)
+            html = html.replace("<LEFT_IMAGE_FILE_NAME>", leftImageFileName)
+            html = html.replace("<RIGHT_IMAGE_FILE_NAME>", rightImageFileName)
+            html = html.replace("<CLICK_COUNTER_ID>", str(newsletterMail_.clickCounterID))
+            html = html.replace("<UNSUBSCRIBE_ID>", str(newsletterMail_.unsubscribeID))
+
+        # set variables and send mail
+        subject = "We've got news for you! A new stormy story is online!"
+        fromMail = self.sender_email
+        toMail = newsletterMail_.mailaddress
+        ccMail = ""
+        bccMail = self.sender_email
+
+        self.smtpLogin()
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
+        self.smtpClose()
+
+        print("# todo : continue here")
 
     def sendNewsletterDEPRECATED(self):
         self.smtpLogin()
@@ -508,98 +581,67 @@ class OpenSubscribe:
     def parseArgs(self):
         parser = argparse.ArgumentParser()
 
-        # ---------------------------
+        # definition of global arguments
 
-        parser.add_argument('--configFileName', default='config/config.json', help='Defines the path of the configuration json-file.')
-
-        # ---------------------------
-
+        # definition of sub-parsers / sub-commands
         subparsers = parser.add_subparsers()
 
-        # --------------------------
-
-        setup_parser = subparsers.add_parser('setup',
-                                   help='Setup OpenSubscribe with options set in config.json')
-
-
+        # sub-command : setup
+        setup_parser = subparsers.add_parser('setup', help='Setup OpenSubscribe with options set in config.json')
         setup_parser.set_defaults(func=self.setup)
+        setup_parser.add_argument('--configFileName', default='config/config.json',
+                                  help='Defines the path of the configuration json-file.')
 
-
-        # --------------------------
-
+        # sub-command : infoMailD
         infoMailD_parser = subparsers.add_parser('infoMailD',
                                    help='Runs a never ending service that sends confirm-subscribtion ' +
                                         'mails for every new subscribtion and info mails for every '+
                                         'new confirmed mail address and every unsubscribed mail address')
 
-
         infoMailD_parser.set_defaults(func=self.infoMailDeamon)
+        infoMailD_parser.add_argument('--configFileName', default='config/config.json',
+                                      help='Defines the path of the configuration json-file.')
 
-        # --------------------------
+        # sub-command : prepareNewsletter
+        prepareNewsletter_parser = subparsers.add_parser('prepareNewsletter', aliases=['pN'],
+                                   help='Creates a new Newsletter entry in the database, ' +
+                                        'which can be send afterwards.')
 
+        prepareNewsletter_parser.set_defaults(func=self.prepareNewsletter)
+        prepareNewsletter_parser.add_argument('--path', help='Defines the root path of the newsletter-data. '
+                                                             'Inside this path for example the config.json file as well'
+                                                             ' as the txt and html file of the mail and also the '
+                                                             'image-files are located')
+        prepareNewsletter_parser.add_argument('--configFileName', default='config/config.json',
+                                              help='Defines the path of the configuration json-file.')
+
+        # sub-command : sendNewsletter
         sendNewsletter_parser = subparsers.add_parser('sendNewsletter',
                                    help='Runs a never ending service that sends confirm-subscribtion ' +
                                         'mails for every new subscribtion and info mails for every '+
                                         'new confirmed mail address and every unsubscribed mail address')
 
-
         sendNewsletter_parser.set_defaults(func=self.sendAllPreparedNewsletters)
+        sendNewsletter_parser.add_argument('--configFileName', default='config/config.json',
+                                           help='Defines the path of the configuration json-file.')
 
-
-        # --------------------------
-
-        prepareNewsletter_parser = subparsers.add_parser('prepareNewsletter', aliases=['pN'],
-                                   help='Creates a new Newsletter entry in the database, ' +
-                                        'which can be send afterwards.')
-
-
-        prepareNewsletter_parser.set_defaults(func=self.prepareNewsletter)
-        prepareNewsletter_parser.add_argument('--url', help='TODO')
-        prepareNewsletter_parser.add_argument('--path', help='TODO')
-
-
-        #parser.add_argument(
-        #    '--setup', action='store_true',
-        #     help='Setup OpenSubscribe with options set in config.json')
-
-        #parser.add_argument(
-        #    '--infoMailD', action='store_true',
-        #     help='Runs a never ending service that sends confirm-subscribtion ' +
-        #          'mails for every new subscribtion and info mails for every '+
-        #          'new confirmed mail address and every unsubscribed mail address')
-
-        #parser.add_argument(
-        #    '--sendNewsletter', action='store_true',
-        #     help='')
-
-        #parser.add_argument(
-        #    '--prepareNewsletter', action='store_true',
-        #     help='Creates a new Newsletter entry in the database, ' +
-        #          'which can be send afterwards.')
-
-        #parser.add_argument(
-        #    '--url', action='store', dest="url",
-        #     help='TODO ')
-
-        #parser.add_argument(
-        #    '--path',
-        #     help='TODO ')
-
+        # parse arguments
         args = parser.parse_args()
+
+        # set member-variables of OpenSubscribe-class
         self.configFileName = args.configFileName
+
+        # return parsed arguments
         return args
 
 def main():
+    # create OpenSubscribe object
     s = OpenSubscribe()
+
+    # parse arguments
     args = s.parseArgs()
 
-    #if args.setup:
-    #    s.setup("config/config_stormy_stories.json")
-    #if args.infoMailD:
-    #    s.infoMailDeamon()
-    #if args.sendNewsletter:
-    #    s.sendNewsletter()
-
+    # run functions which were defined during parsing of arguments
     if hasattr(args, 'func') and args.func:
         args.func(args)
     else:

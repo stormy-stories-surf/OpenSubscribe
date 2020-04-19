@@ -23,9 +23,7 @@ DROP TABLE IF EXISTS newsletter;
 
 CREATE TABLE newsletter (
    id INT AUTO_INCREMENT primary key NOT NULL,
-   url text NOT NULL,
-   pathTXT text NOT NULL,
-   pathHTML text NOT NULL,
+   path text NOT NULL,
    clickCounterID text NOT NULL,
    clickCounter INT,
    allMailsSent boolean

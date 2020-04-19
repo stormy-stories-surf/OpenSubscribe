@@ -80,12 +80,12 @@ in
 Add some subscribers to your database, either by using the php form or by manually executing some sql commands
 
 `
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'test1@test.de', '10', '20', true, true, false, false);
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'test2@test.de', '11', '21', true, true, false, false);
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'test3@test.de', '12', '22', true, false, false, false);
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'test4@test.de', '13', '23', false, true, false, false);
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'test5@test.de', '14', '24', false, false, false, false);
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'test6@test.de', '15', '25', true, true, false, false);
+INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test1@stormy-stories.surf', 'abc10def', 'fed20cba', true, true, false, false);
+INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test2@stormy-stories.surf', 'abc11def', 'fed21cba', true, true, false, false);
+INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test3@stormy-stories.surf', 'abc12def', 'fed22cba', true, false, false, false);
+INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test4@stormy-stories.surf', 'abc13def', 'fed23cba', false, true, false, false);
+INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test5@stormy-stories.surf', 'abc14def', 'fed24cba', false, false, false, false);
+INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test6@stormy-stories.surf', 'abc15def', 'fed25cba', true, true, false, false);
 `
 
 ### Prepare Newsletter
@@ -94,6 +94,7 @@ Open Terminal navigate to OpenSubscribe directory and execute
 1. Execute setup
 2. Prepare Newsletter
 `
-python3 python/OpenSubscribe.py setup --configFileName config/config_stormy_stories.surf
-python3 python/OpenSubscribe.py prepareNewsletter --url "https://stormy-stories.surf/2017/irland-2017-brandon-bay-stradbally/" --path "~/Desktop/Archived/Hobbys & Projekte/IT/Blog/repos/stormy-stories-newsletter-mails/mails/posts/2017/ireland-irland/11-06-brandon-bay-stradbally"
+python3 python/OpenSubscribe.py setup --configFileName "config/config_stormy_stories.json" 
+python3 python/OpenSubscribe.py prepareNewsletter --configFileName "config/config_stormy_stories.json" --path "/home/anon/Desktop/Archived/Hobbys & Projekte/IT/Blog/repos/stormy-stories-newsletter-mails/mails/posts/2017/ireland-irland/11-06-brandon-bay-stradbally"
+python3 python/OpenSubscribe.py sendNewsletter --configFileName "config/config_stormy_stories.json"
 `
