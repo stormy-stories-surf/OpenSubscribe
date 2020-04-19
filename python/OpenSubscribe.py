@@ -14,68 +14,108 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 
+class SQLWrapper:
+    def __init__(self, configFileName = "config/config.json"):
+        with open(configFileName) as json_file:
+            data = json.load(json_file)
+            self.sqlHost = data["SQL_HOST"]
+            self.sqlDatabase = data["SQL_DATABASE"]
+            sendMailsData = data["SEND_MAILS"]
+            self.sendMailsSqlUser = sendMailsData["SQL_USER"]
+            self.sendMailsSqlPW = sendMailsData["SQL_PASSWORD"]
+        self.databaseConnected = False
+
+    def connect(self):
+        try:
+            self.mysqlConnector = mysql.connector.connect(
+                host=self.sqlHost,
+                user=self.sendMailsSqlUser,
+                passwd=self.sendMailsSqlPW,
+                database=self.sqlDatabase
+            )
+            self.databaseConnected = True
+
+        except Error as error:
+            print(error)
+
+    def close(self):
+        if self.databaseConnected:
+            try:
+                self.mysqlConnector.close()
+                self.databaseConnected = False
+            except Error as error:
+                print(error)
+
+    def getStatementTypeFromSQLQuery(self, sqlQuery_):
+        statementType = sqlQuery_.partition(' ')[0]
+        statementType = statementType.upper()
+        if statementType == "":
+            print("Error the given sql-query '{}' does not include any of the know sql-statement types. "
+                  "Please use either 'insert' or 'select' as the first word of your sql-query!".format(sqlQuery_))
+
+        return statementType
+
+    def executeSQLStatement(self, sqlQuery_, sqlValues_):
+        statementType = self.getStatementTypeFromSQLQuery(sqlQuery_)
+
+        if not self.databaseConnected:
+            self.connect()
+
+        if statementType == "SELECT":
+            result = ""
+
+        try:
+            mysqlCursor = self.mysqlConnector.cursor()
+            mysqlCursor.execute(sqlQuery_, sqlValues_)
+
+            if statementType == "INSERT":
+                self.mysqlConnector.commit()
+            elif statementType == "SELECT":
+                result = mysqlCursor.fetchall()
+
+        except Error as error:
+            print(error)
+
+        finally:
+            mysqlCursor.close()
+            if statementType == "SELECT":
+                return result
+
+    def insert(self, sqlQuery_, sqlValues_):
+        self.executeSQLStatement(sqlQuery_, sqlValues_)
+        print("Successfully inserted query {} with values {}".format(sqlQuery_, sqlValues_))
+
+    def select(self, sqlQuery_, sqlValues_):
+        return self.executeSQLStatement(sqlQuery_, sqlValues_)
+
+    def __del__(self):
+        self.close()
+
 class Newsletter:
-    def __init__(self, path, url):
+    def __init__(self, path, url, configFileName = "config/config.json"):
         self.path = path
         self.pathTXT = self.path + '/newBlogPost.txt'
         self.pathHTML = self.path + '/newBlogPost.html'
         self.url = url
+        self.configFileName = configFileName
         self.clickCounterID = secrets.token_hex(64)
         self.creatNewsletterInDatabase()
         self.ID = self.getIDFromDatabase()
 
     def creatNewsletterInDatabase(self):
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
+        sqlQuery = "INSERT INTO newsletter (url, pathTXT, pathHTML, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s, %s, %s)"
+        sqlValues = (self.url, self.pathTXT, self.pathHTML, self.clickCounterID, 0, False)
+        sqlWrapper = SQLWrapper(self.configFileName)
+        sqlWrapper.insert(sqlQuery, sqlValues)
+        print("Successfully created newsletter for url {}, pathTXT {} and pathHTML {}.".format(self.url, self.pathTXT, self.pathHTML))
 
-            mycursor = mydb.cursor()
-            sql = "INSERT INTO newsletter (url, pathTXT, pathHTML, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s, %s, %s)"
-
-            val = (self.url, self.pathTXT, self.pathHTML, self.clickCounterID, 0, False)
-            mycursor.execute(sql, val)
-
-            # accept the changes
-            mydb.commit()
-
-            print("Successfully created newsletter for url {}, pathTXT {} and pathHTML {}.".format(self.url, self.pathTXT, self.pathHTML))
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
-
-    # todo : try to get this already from insert
+    #todo : try to get this already from insert
     def getIDFromDatabase(self):
-        myresult = ""
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
-
-            mycursor = mydb.cursor()
-            sql = "SELECT id FROM newsletter WHERE url = %s AND pathTXT = %s "
-            val = (self.url, self.pathTXT)
-            mycursor.execute(sql, val)
-
-            myresult = mycursor.fetchall()
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
-            return myresult[0][0]
+        sqlQuery = "SELECT id FROM newsletter WHERE url = %s AND pathTXT = %s"
+        sqlValues = (self.url, self.pathTXT)
+        sqlWrapper = SQLWrapper(self.configFileName)
+        result = sqlWrapper.select(sqlQuery, sqlValues)
+        return result[0][0]
 
     def getID(self):
         return self.ID
@@ -129,9 +169,9 @@ class OpenSubscribe:
             subscribtionFormData = data["SUBSCRIBTION_FORM"]
             subscribtionFormSqlUser = subscribtionFormData["SQL_USER"]
             subscribtionFormSqlPW = subscribtionFormData["SQL_PASSWORD"]
-            sendConfirmSubscribtionMailsData = data["SEND_CONFIRM_SUBSCRIBTION_MAILS"]
-            sendConfirmSubscribtionMailsSqlUser = sendConfirmSubscribtionMailsData["SQL_USER"]
-            sendConfirmSubscribtionMailsSqlPW = sendConfirmSubscribtionMailsData["SQL_PASSWORD"]
+            sendMailsData = data["SEND_MAILS"]
+            sendMailsSqlUser = sendMailsData["SQL_USER"]
+            sendMailsSqlPW = sendMailsData["SQL_PASSWORD"]
             unsubscribeData = data["UNSUBSCRIBE"]
             unsubscribeSqlUser = unsubscribeData["SQL_USER"]
             unsubscribeSqlPW = unsubscribeData["SQL_PASSWORD"]
@@ -157,7 +197,7 @@ class OpenSubscribe:
             self.replaceStringInFile(filename, "<PUT_YOUR_SENDER_PASSWORD_HERE>", smtpSenderPassword)
             self.replaceStringInFile(filename, "<PUT_YOUR_CONFIRM_SUBSCRIBTION_USER_PASSWORD_HERE>", confirmSubscribtionSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_SUBSCRIBTION_FORM_USER_PASSWORD_HERE>", subscribtionFormSqlPW)
-            self.replaceStringInFile(filename, "<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>", sendConfirmSubscribtionMailsSqlPW)
+            self.replaceStringInFile(filename, "<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>", sendMailsSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_UNSUBSCRIBE_USER_PASSWORD_HERE>", unsubscribeSqlPW)
             self.replaceStringInFile(filename, "<PUT_YOUR_UPDATE_CLICK_COUNTER_USER_PASSWORD_HERE>", upDateClickCounterSqlPW)
 
@@ -352,49 +392,16 @@ class OpenSubscribe:
             time.sleep(30)
 
     def getUnsubscribedMailAddresses(self):
-        myresult = ""
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
-
-            mycursor = mydb.cursor()
-            mycursor.execute( "SELECT id, mailaddress, subscribeID, unsubscribeID FROM subscriber WHERE unSubscribed = 1 AND unSubscribedMailSent = 0 ")
-            myresult = mycursor.fetchall()
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
-            return myresult
-
+        sqlQuery = "SELECT id, mailaddress, subscribeID, unsubscribeID FROM subscriber WHERE unSubscribed = 1 AND unSubscribedMailSent = 0 "
+        sqlValues = ()
+        sqlWrapper = SQLWrapper(self.configFileName)
+        return sqlWrapper.select(sqlQuery, sqlValues)
 
     def getMailAddressesWithoutConfirmation(self):
-        myresult = ""
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
-
-            mycursor = mydb.cursor()
-            mycursor.execute( "SELECT id, mailaddress, subscribeID, unsubscribeID FROM subscriber WHERE confirmationMailSent = 0 ")
-            myresult = mycursor.fetchall()
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
-            return myresult
+        sqlQuery = "SELECT id, mailaddress, subscribeID, unsubscribeID FROM subscriber WHERE confirmationMailSent = 0 "
+        sqlValues = ()
+        sqlWrapper = SQLWrapper(self.configFileName)
+        return sqlWrapper.select(sqlQuery, sqlValues)
 
     def updateUnSubscribedMailSent(self, id_):
         try:
@@ -494,31 +501,9 @@ class OpenSubscribe:
             return myresult
 
     def prepareNewsletter(self, args):
-        newsletter = Newsletter(args.url, args.path)
+        newsletter = Newsletter(args.url, args.path, args.configFileName)
         self.createNewsletterMail(newsletter.getID())
-        print("Successfully prepared database entries for Newsletter with ID {} for url {} and path {}.".format(newsletter.getID(), args.url, args.path))
-
-    def getUnsubscribedMailAddresses(self):
-        myresult = ""
-        try:
-            mydb = mysql.connector.connect(
-                host="localhost",
-                user="SendMailsUser",
-                passwd="<PUT_YOUR_SEND_MAILS_USER_PASSWORD_HERE>",
-                database="OpenSubscribe"
-            )
-
-            mycursor = mydb.cursor()
-            mycursor.execute( "SELECT id, mailaddress, subscribeID, unsubscribeID FROM subscriber WHERE unSubscribed = 1 AND unSubscribedMailSent = 0 ")
-            myresult = mycursor.fetchall()
-
-        except Error as error:
-            print(error)
-
-        finally:
-            mycursor.close()
-            mydb.close()
-            return myresult
+        print("Successfully prepared database entries for newsletter with ID {} for url {} and path {}.".format(newsletter.getID(), args.url, args.path))
 
     def sendAllPreparedNewsletters(self, args):
         myresult=""
@@ -614,6 +599,12 @@ class OpenSubscribe:
     def parseArgs(self):
         parser = argparse.ArgumentParser()
 
+        # ---------------------------
+
+        parser.add_argument('--configFileName', default='config/config.json', help='Defines the path of the configuration json-file.')
+
+        # ---------------------------
+
         subparsers = parser.add_subparsers()
 
         # --------------------------
@@ -623,7 +614,7 @@ class OpenSubscribe:
 
 
         setup_parser.set_defaults(func=self.setup)
-        setup_parser.add_argument('--configFileName', default='config/config.json', help='Defines the path of the configuration json-file.')
+
 
         # --------------------------
 
@@ -686,6 +677,7 @@ class OpenSubscribe:
         #     help='TODO ')
 
         args = parser.parse_args()
+        self.configFileName = args.configFileName
         return args
 
 def main():
