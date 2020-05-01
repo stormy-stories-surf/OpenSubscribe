@@ -261,7 +261,7 @@ class OpenSubscribe:
         ccMail = ""
         bccMail = ""
 
-        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html, [])
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
 
     def sendUnsubscribedInfoMail(self, receipientData_):
         # get individual data from receipientData_
@@ -286,7 +286,7 @@ class OpenSubscribe:
         ccMail = ""
         bccMail = ""
 
-        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html, [])
+        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
 
 
     def sendConfirmSubscribtionMail(self, receipientData_):
