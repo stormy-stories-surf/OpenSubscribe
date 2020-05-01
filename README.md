@@ -13,12 +13,24 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 - [x] make GoTo.php to increase counter in database
 - [x] implement --prepareNewsletter
 - [x] add newsletter-entry table to log which mails are sent
-- [ ] implement OpenSubscribe --sendNewsletter
-- [ ] test OpenSubscribe --sendNewsletter
-- [ ] get newsletterMailID from insert
+- [x] implement OpenSubscribe --sendNewsletter
+- [x] test OpenSubscribe --sendNewsletter
+- [ ] make mail-templates compatible to Outlook html rendering
+- [ ] Run through testing phase:
+  - [x] AOL Mail
+  - [x] Gmail.com
+  - [x] GMX.de
+  - [x] Outlook.com
+  - [x] t-online.de
+  - [x] web.de
+  - [x] yahoo.com
+  - [ ] Outlook
+  - [ ] AppleMail
+  - [ ] Thunderbird
 
 # v0.2.0
 - [ ] test for already existing database entries during prepareNewsletter
+- [ ] get newsletterMailID from insert
 
 # vX.Y.Z
 - [ ] sent newsletter automatically at a given time
@@ -32,7 +44,7 @@ cd /etc/OpenSubscribe/
 sudo su
 git stash
 git pull
-python3 python/OpenSubscribe.py --configFileName config/config_stormy_stories.json setup
+python3 python/OpenSubscribe.py setup --configFileName config/config_stormy_stories.json
 mysql < sql/setupDatabase.sql
 cp -v php/Unsubscribe.php /var/www/html/
 cp -v php/ConfirmSubscribtion.php /var/www/html/
@@ -94,7 +106,7 @@ Open Terminal navigate to OpenSubscribe directory and execute
 1. Execute setup
 2. Prepare Newsletter
 `
-python3 python/OpenSubscribe.py setup --configFileName "config/config_stormy_stories.json" 
+python3 python/OpenSubscribe.py setup --configFileName "config/config_stormy_stories.json"
 python3 python/OpenSubscribe.py prepareNewsletter --configFileName "config/config_stormy_stories.json" --path "/home/anon/Desktop/Archived/Hobbys & Projekte/IT/Blog/repos/stormy-stories-newsletter-mails/mails/posts/2017/ireland-irland/11-06-brandon-bay-stradbally"
 python3 python/OpenSubscribe.py sendNewsletter --configFileName "config/config_stormy_stories.json"
 `

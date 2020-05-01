@@ -14,6 +14,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 
+
 class SQLWrapper:
     def __init__(self, configFileName = "config/config.json"):
         with open(configFileName) as json_file:
@@ -213,6 +214,7 @@ class OpenSubscribe:
                 print(line.replace(old_string, new_string), end='')
 
     def smtpLogin(self):
+        print("Trying to open the connection to the smtp server")
         # Create a secure SSL context
         self.context = ssl.create_default_context()
 
@@ -393,7 +395,14 @@ class OpenSubscribe:
             print(e)
 
     def smtpClose(self):
-        self.server.quit()
+        # Try to log in to server and send email
+        print("Trying to close the connection to the smtp server")
+        try:
+            self.server.quit()
+        except Exception as e:
+            # Print any error messages to stdout
+            print("An error occured during smtpClose : '{}'".format(e))
+
 
     def sendConfirmSubscribtionMails(self):
         self.smtpLogin()
@@ -650,5 +659,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-

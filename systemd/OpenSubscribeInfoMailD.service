@@ -3,7 +3,7 @@ Description=OpenSubscribe - send confirm-subscribtion-mails daemon
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /etc/OpenSubscribe/python/OpenSubscribe.py --configFileName /etc/OpenSubscribe/config/config_stormy_stories.json infoMailD
+ExecStart=/usr/bin/python3 /etc/OpenSubscribe/python/OpenSubscribe.py infoMailD --configFileName /etc/OpenSubscribe/config/config_stormy_stories.json
 
 [Install]
 WantedBy=multi-user.target
