@@ -41,7 +41,7 @@
                     <p>Thanks a lot for your interest!</p>
 										<p>Your stormy-stories team!</p>
                     <p><br/></p>
-                    <p>-------------------------------------------------------------------------------------------------------------------</p>
+                    <hr style: dashed>
                     <p><br/></p>
                     <p>Du hast dich erfolgreich für unseren E-Mail Newsletter angemeldet!</p>
                     <p>Ab sofort wirst du automatisch per Mail über unsere neuen Beiträge benachrichtigt.</p>
