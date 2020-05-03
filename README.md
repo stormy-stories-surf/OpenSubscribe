@@ -17,12 +17,12 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 - [x] test OpenSubscribe --sendNewsletter
 - [ ] fix bug : if you create two newsletters with same path the newsletterMail data will have the wrong newsletter ID
 - [x] only send mails to which are not yet sent = 1
-- [ ] update logo in website and all mails
-- [ ] make mail-templates compatible to Outlook html rendering
-- [ ] rendering of logo for confirmSubscrtiption mail  in google-mail
-- [ ] rendering of logo for newsletter mail t-online mail
+- [x] update logo in website and all mails
+- [x] make mail-templates compatible to Outlook html rendering
+- [x] rendering of logo for confirmSubscrtiption mail  in google-mail
+- [x] rendering of logo for newsletter mail t-online mail
 - [ ] add unsubscription confirmed html
-- [ ] use OpenSubscribe in newsletter page
+- [x] use OpenSubscribe in newsletter page
 - [x] update 'sent' field in database with 'sendNewsletter'
 - [ ] update 'allMailsSent' field in database with 'sendNewsletter'
 - [ ] Run through testing phase:
@@ -71,6 +71,7 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 - [ ] sent newsletter automatically at a given time
 - [ ] remove hardcoded passwords from all source-code
 - [ ] add unit-test to test against logo picture cannot be found
+- [ ] add unit-test to test against bug : if you create two newsletters with same path the newsletterMail data will have the wrong newsletter ID
 
 ## Setup
 ```
