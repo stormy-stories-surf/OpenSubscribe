@@ -151,6 +151,7 @@ class NewsletterMail:
         print("unsubscribeID : {}".format(self.unsubscribeID))
         print("-----------------------------")
 
+
 class OpenSubscribe:
     def __init__(self):
         self.sender_email = "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
@@ -346,9 +347,13 @@ class OpenSubscribe:
 
             print("Successfully sent email from " + from_ + " to " + to_)
 
+            return True
+
         except Exception as e:
             # Print any error messages to stdout
             print(e)
+
+            return False
 
     def sendMailDEPRECATED(self, subject_, from_, to_, cc_, bcc_, contentTXT_, contentHTML_, images_):
         try:
@@ -473,6 +478,12 @@ class OpenSubscribe:
         self.createNewsletterMail(newsletter.getID())
         print("Successfully prepared database entries for newsletter with ID {} for path {}.".format(newsletter.getID(), args.path))
 
+    def updateNewsletterMailSent(self, newsletterMailID_):
+        sqlQuery = "UPDATE newsletterMail SET sent = 1 WHERE id = %s"
+        sqlValues = (newsletterMailID_,)
+        sqlWrapper = SQLWrapper(self.configFileName)
+        sqlWrapper.update(sqlQuery, sqlValues)
+
     def sendAllPreparedNewsletters(self, args):
         sqlQuery = "SELECT newsletterMail.id AS newsletterMailID, " \
                 "newsletterMail.newsletterID, " \
@@ -483,7 +494,8 @@ class OpenSubscribe:
                 "subscriber.unsubscribeID " \
                 "FROM ((newsletterMail " \
                 "INNER JOIN subscriber ON newsletterMail.subscriberID = subscriber.id) " \
-                "INNER JOIN newsletter ON newsletterMail.newsletterID = newsletter.id);"
+                "INNER JOIN newsletter ON newsletterMail.newsletterID = newsletter.id) " \
+                "WHERE newsletterMail.sent = 0;"
         sqlValues = ()
         sqlWrapper = SQLWrapper(self.configFileName)
         myresult = sqlWrapper.select(sqlQuery, sqlValues)
@@ -541,10 +553,9 @@ class OpenSubscribe:
         bccMail = self.sender_email
 
         self.smtpLogin()
-        self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
+        if (self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)):
+            self.updateNewsletterMailSent(newsletterMail_.newsletterMailID)
         self.smtpClose()
-
-        print("# todo : continue here")
 
     def sendNewsletterDEPRECATED(self):
         self.smtpLogin()

@@ -15,18 +15,53 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 - [x] add newsletter-entry table to log which mails are sent
 - [x] implement OpenSubscribe --sendNewsletter
 - [x] test OpenSubscribe --sendNewsletter
+- [ ] fix bug : if you create two newsletters with same path the newsletterMail data will have the wrong newsletter ID
+- [x] only send mails to which are not yet sent = 1
+- [ ] update logo in website and all mails
 - [ ] make mail-templates compatible to Outlook html rendering
+- [ ] rendering of logo for confirmSubscrtiption mail  in google-mail
+- [ ] rendering of logo for newsletter mail t-online mail
+- [ ] add unsubscription confirmed html
+- [ ] use OpenSubscribe in newsletter page
+- [x] update 'sent' field in database with 'sendNewsletter'
+- [ ] update 'allMailsSent' field in database with 'sendNewsletter'
 - [ ] Run through testing phase:
-  - [x] AOL Mail
-  - [x] Gmail.com
-  - [x] GMX.de
-  - [x] Outlook.com
-  - [x] t-online.de
-  - [x] web.de
-  - [x] yahoo.com
-  - [ ] Outlook
-  - [ ] AppleMail
-  - [ ] Thunderbird
+  - [ ] Check if confirm subscribtion mail is received and displayed well formatted
+  - [ ] Check if confirm subscribtion mail is not shown as spam / junk
+  - [ ] Check if 'new subscriber mail' is received by info@
+  - [ ] Check if newsletter mail is not received if subscribtion is not confirmed
+  - [ ] Check if clicking the confirm-subscription links updates the subscribtionConfirmed field in the database
+  - [ ] Check if clicking the confirm-subscription redirects to the subscribtion confirmed page, which is displayed well formatted
+  - [ ] Check if newsletter mail is received if subscribtion is confirmed
+  - [ ] Check if newsletter mail is well formatted
+  - [ ] Check if newsletter mail is not shown as spam / junk
+  - [ ] Check if clicking the links inside the mail redirect to the new blog-post
+  - [ ] Check if clicking the links increments the clickCounter field in database
+  - [ ] Check if clicking the unsubscription link removes mail-address from database
+  - [ ] Check if clicking the unsubscription links updates the unSubscribed field in the database
+  - [ ] Check if clicking the unsubscription link redirects to the unsubscribtion confirmed page, which is displayed well formatted
+  - [ ] Check if newsletter mail is received if subscribtion is confirmed
+  - [ ] Test the above steps for
+    - [x] AOL Mail
+    - [x] Gmail.com
+    - [x] GMX.de
+    - [x] Outlook.com
+    - [x] t-online.de
+    - [x] web.de
+    - [x] yahoo.com
+    - [ ] Outlook Desktop Application
+    - [ ] Outlook Office 365
+    - [ ] Mail Client on IPhone
+    - [ ] Mail Client on IPad
+    - [ ] Mail Client on Android Phone
+    - [ ] Mail Client on Android Tablet
+    - [ ] Thunderbird
+    - [ ] Firefox
+    - [ ] Google Chrome
+    - [ ] Opera
+    - [ ] Microsoft Internet Explorer
+    - [ ] Microsoft Edge
+
 
 # v0.2.0
 - [ ] test for already existing database entries during prepareNewsletter
