@@ -21,7 +21,7 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 - [x] make mail-templates compatible to Outlook html rendering
 - [x] rendering of logo for confirmSubscrtiption mail  in google-mail
 - [x] rendering of logo for newsletter mail t-online mail
-- [ ] add unsubscription confirmed html
+- [x] add unsubscription confirmed html
 - [x] use OpenSubscribe in newsletter page
 - [x] update 'sent' field in database with 'sendNewsletter'
 - [ ] update 'allMailsSent' field in database with 'sendNewsletter'
