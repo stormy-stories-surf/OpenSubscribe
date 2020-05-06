@@ -33,7 +33,7 @@
 </head>
 
 <body style="margin: 0; padding: 0;" bgcolor="#F4F4F4">
-    <table align="center" border="0" cellpadding="0" cellspacing="0" class="responsive"" style="border-collapse: collapse; box-shadow: 0px 0px 36px 15px rgba(0, 0, 0, 0.28);">
+    <table align="center" border="0" cellpadding="0" cellspacing="0" class="responsive" style="border-collapse: collapse; box-shadow: 0px 0px 36px 15px rgba(0, 0, 0, 0.28);">
         <tr>
             <td style="padding-top: 10px; padding-right: 10px; padding-bottom: 8px; padding-left: 5px;">
                 <img src="https://stormy-stories.surf/data/stormy-stories-newsletter-mails/mails/subscribtion/logo.png" alt="You should see our logo here, but this was blocked by your mail-client" class="center" style="width: 50%;" />
