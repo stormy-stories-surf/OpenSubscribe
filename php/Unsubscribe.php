@@ -11,7 +11,6 @@
             margin-right: auto;
         }
 
-
         /* Smartphones (portrait) ----------- */
         @media only screen and (max-width : 600px) {
           .responsive {
