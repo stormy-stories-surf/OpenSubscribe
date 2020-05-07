@@ -41,3 +41,46 @@
   - [ ] Umleitung zur "succesfully un-subscribed" info page funktioniert
   - [ ] Bescheid sagen, dass das Abonemment gelöscht wurde. Darauf hin schicke ich eine Runde Newsletter raus
   - [ ] Newsletter ist auch nach 5 Minuten nicht angekommen
+
+# Allgemeine Optik Blog
+- [ ] Startseite https://stormy-stories.surf/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+- [ ] Blog-Post https://stormy-stories.surf/2017/orkan-irma-cuxhaven-sahlenburg/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+- [ ] Blog-Post https://stormy-stories.surf/2017/irland-2017-ankunft/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+- [ ] Blog-Post https://stormy-stories.surf/2017/irland-2017-brandon-bay-stradbally/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+- [ ] Seite https://stormy-stories.surf/about/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+- [ ] Seite https://stormy-stories.surf/die-autoren/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+- [ ] Seite https://stormy-stories.surf/kontakt/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+- [ ] Seite https://stormy-stories.surf/e-mail-newsletter/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+- [ ] Seite https://stormy-stories.surf/sticker/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+- [ ] Seite https://stormy-stories.surf/impressum/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+- [ ] Seite https://stormy-stories.surf/datenschutzerklaerung/ öffnen
+  - [ ] Format der Seite im Hochformat okay
+  - [ ] Format des Seite im Querformat okay
+
+
+
+
+
+
+
+
