@@ -15,7 +15,7 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 - [x] add newsletter-entry table to log which mails are sent
 - [x] implement OpenSubscribe --sendNewsletter
 - [x] test OpenSubscribe --sendNewsletter
-- [ ] fix bug : if you create two newsletters with same path the newsletterMail data will have the wrong newsletter ID
+- [x] fix bug : if you create two newsletters with same path the newsletterMail data will have the wrong newsletter ID
 - [x] only send mails to which are not yet sent = 1
 - [x] update logo in website and all mails
 - [x] make mail-templates compatible to Outlook html rendering
@@ -24,7 +24,7 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 - [x] add unsubscription confirmed html
 - [x] use OpenSubscribe in newsletter page
 - [x] update 'sent' field in database with 'sendNewsletter'
-- [ ] update 'allMailsSent' field in database with 'sendNewsletter'
+- [x] get newsletterMailID from insert
 - [ ] Run through testing phase:
   - [ ] Check if confirm subscribtion mail is received and displayed well formatted
   - [ ] Check if confirm subscribtion mail is not shown as spam / junk
@@ -65,7 +65,7 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 
 # v0.2.0
 - [ ] test for already existing database entries during prepareNewsletter
-- [ ] get newsletterMailID from insert
+- [ ] update 'allMailsSent' field in database with 'sendNewsletter'
 
 # vX.Y.Z
 - [ ] sent newsletter automatically at a given time

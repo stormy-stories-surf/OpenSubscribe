@@ -63,14 +63,19 @@ class SQLWrapper:
         if not self.databaseConnected:
             self.connect()
 
-        if statementType == "SELECT":
+        if statementType == "INSERT":
+            primaryKeyValue = ""
+        elif statementType == "SELECT":
             result = ""
 
         try:
             mysqlCursor = self.mysqlConnector.cursor()
             mysqlCursor.execute(sqlQuery_, sqlValues_)
 
-            if statementType == "INSERT" or statementType == "UPDATE":
+            if statementType == "INSERT":
+                self.mysqlConnector.commit()
+                primaryKeyValue = mysqlCursor.lastrowid
+            if statementType == "UPDATE":
                 self.mysqlConnector.commit()
             elif statementType == "SELECT":
                 result = mysqlCursor.fetchall()
@@ -82,10 +87,13 @@ class SQLWrapper:
             mysqlCursor.close()
             if statementType == "SELECT":
                 return result
+            elif statementType == "INSERT":
+                return primaryKeyValue
 
     def insert(self, sqlQuery_, sqlValues_):
-        self.executeSQLStatement(sqlQuery_, sqlValues_)
+        primaryKeyValue = self.executeSQLStatement(sqlQuery_, sqlValues_)
         print("Successfully inserted query {} with values {}".format(sqlQuery_, sqlValues_))
+        return primaryKeyValue
 
     def select(self, sqlQuery_, sqlValues_):
         return self.executeSQLStatement(sqlQuery_, sqlValues_)
@@ -108,23 +116,15 @@ class Newsletter:
         self.path = path
         self.configFileName = configFileName
         self.clickCounterID = secrets.token_hex(64)
-        self.creatNewsletterInDatabase()
-        self.ID = self.getIDFromDatabase()
+        self.ID = self.createNewsletterInDatabase()
 
-    def creatNewsletterInDatabase(self):
+    def createNewsletterInDatabase(self):
         sqlQuery = "INSERT INTO newsletter (path, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s)"
         sqlValues = (self.path, self.clickCounterID, 0, False)
         sqlWrapper = SQLWrapper(self.configFileName)
-        sqlWrapper.insert(sqlQuery, sqlValues)
+        primaryKeyValue = sqlWrapper.insert(sqlQuery, sqlValues)
         print("Successfully created newsletter for path {}.".format(self.path))
-
-    #todo : try to get this already from insert
-    def getIDFromDatabase(self):
-        sqlQuery = "SELECT id FROM newsletter WHERE path = %s"
-        sqlValues = (self.path,)
-        sqlWrapper = SQLWrapper(self.configFileName)
-        result = sqlWrapper.select(sqlQuery, sqlValues)
-        return result[0][0]
+        return primaryKeyValue
 
     def getID(self):
         return self.ID
