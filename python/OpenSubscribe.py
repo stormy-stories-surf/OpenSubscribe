@@ -258,7 +258,7 @@ class OpenSubscribe:
         # set variables and send mail
         subject = "There is a new subscriber to your website!"
         fromMail = self.sender_email
-        toMail = "info@stormy-stories.surf"
+        toMail = "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
         ccMail = ""
         bccMail = ""
 
@@ -283,7 +283,7 @@ class OpenSubscribe:
         # set variables and send mail
         subject = "Someone unSubscribed from your mail-newsletter of your website!"
         fromMail = self.sender_email
-        toMail = "info@stormy-stories.surf"
+        toMail = "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
         ccMail = ""
         bccMail = ""
 
@@ -317,7 +317,7 @@ class OpenSubscribe:
         fromMail = self.sender_email
         toMail = mailaddress
         ccMail = ""
-        bccMail = "info@stormy-stories.surf"
+        bccMail = "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
 
         self.sendMail(subject, fromMail, toMail, ccMail, bccMail, text, html)
 
@@ -561,8 +561,8 @@ class OpenSubscribe:
         self.smtpLogin()
 
         try:
-            from_ = "info@stormy-stories.surf"
-            to_ = "info@stormy-stories.surf"
+            from_ = "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
+            to_ = "<PUT_YOUR_SENDER_MAIL_ADDRESS_HERE>"
             message = MIMEMultipart("subject_")
             message["Subject"] = "subject_"
             message["From"] = from_
