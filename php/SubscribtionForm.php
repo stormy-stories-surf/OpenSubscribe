@@ -147,7 +147,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <h3>Abonniere unseren Newsletter</h3>
 Du willst benachrichtigt werden, wenn wir einen neuen Beitrag veröffentlichen? Dann trage dich hier in unsere Mailing - Liste mit ein :)
 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-  E-mail: <input type="text" name="email" value="<?php echo $email;?>">
+  E-Mail: <input type="text" name="email" value="<?php echo $email;?>">
   <span class="error">* <?php echo $errorText;?></span>
   <br><br>
   <input type="submit" name="submit" value="Abonnieren!">
