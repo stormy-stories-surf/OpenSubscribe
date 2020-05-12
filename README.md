@@ -64,6 +64,7 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 
 
 # v0.2.0
+- [ ] add CI with unit-test
 - [ ] test for already existing database entries during prepareNewsletter
 - [ ] update 'allMailsSent' field in database with 'sendNewsletter'
 - [ ] already unSubscribed cannot confirm
