@@ -25,23 +25,23 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
 - [x] use OpenSubscribe in newsletter page
 - [x] update 'sent' field in database with 'sendNewsletter'
 - [x] get newsletterMailID from insert
-- [ ] Run through testing phase:
-  - [ ] Check if confirm subscribtion mail is received and displayed well formatted
-  - [ ] Check if confirm subscribtion mail is not shown as spam / junk
-  - [ ] Check if 'new subscriber mail' is received by info@
-  - [ ] Check if newsletter mail is not received if subscribtion is not confirmed
-  - [ ] Check if clicking the confirm-subscription links updates the subscribtionConfirmed field in the database
-  - [ ] Check if clicking the confirm-subscription redirects to the subscribtion confirmed page, which is displayed well formatted
-  - [ ] Check if newsletter mail is received if subscribtion is confirmed
-  - [ ] Check if newsletter mail is well formatted
-  - [ ] Check if newsletter mail is not shown as spam / junk
-  - [ ] Check if clicking the links inside the mail redirect to the new blog-post
-  - [ ] Check if clicking the links increments the clickCounter field in database
-  - [ ] Check if clicking the unsubscription link removes mail-address from database
-  - [ ] Check if clicking the unsubscription links updates the unSubscribed field in the database
-  - [ ] Check if clicking the unsubscription link redirects to the unsubscribtion confirmed page, which is displayed well formatted
-  - [ ] Check if newsletter mail is received if subscribtion is confirmed
-  - [ ] Test the above steps for
+- [s] Run through testing phase:
+  - [x] Check if confirm subscribtion mail is received and displayed well formatted
+  - [x] Check if confirm subscribtion mail is not shown as spam / junk
+  - [x] Check if 'new subscriber mail' is received by info@
+  - [x] Check if newsletter mail is not received if subscribtion is not confirmed
+  - [x] Check if clicking the confirm-subscription links updates the subscribtionConfirmed field in the database
+  - [x] Check if clicking the confirm-subscription redirects to the subscribtion confirmed page, which is displayed well formatted
+  - [x] Check if newsletter mail is received if subscribtion is confirmed
+  - [x] Check if newsletter mail is well formatted
+  - [x] Check if newsletter mail is not shown as spam / junk
+  - [x] Check if clicking the links inside the mail redirect to the new blog-post
+  - [x] Check if clicking the links increments the clickCounter field in database
+  - [x] Check if clicking the unsubscription link removes mail-address from database
+  - [x] Check if clicking the unsubscription links updates the unSubscribed field in the database
+  - [x] Check if clicking the unsubscription link redirects to the unsubscribtion confirmed page, which is displayed well formatted
+  - [x] Check if newsletter mail is received if subscribtion is confirmed
+  - [x] Test the above steps for
     - [x] AOL Mail
     - [x] Gmail.com
     - [x] GMX.de
@@ -49,18 +49,18 @@ A python and php implementation of a tooling for handling E-Mail subscribtions /
     - [x] t-online.de
     - [x] web.de
     - [x] yahoo.com
-    - [ ] Outlook Desktop Application
-    - [ ] Outlook Office 365
-    - [ ] Mail Client on IPhone
-    - [ ] Mail Client on IPad
-    - [ ] Mail Client on Android Phone
-    - [ ] Mail Client on Android Tablet
-    - [ ] Thunderbird
-    - [ ] Firefox
-    - [ ] Google Chrome
-    - [ ] Opera
-    - [ ] Microsoft Internet Explorer
-    - [ ] Microsoft Edge
+    - [x] Outlook Desktop Application
+    - [x] Outlook Office 365
+    - [x] Mail Client on IPhone
+    - [x] Mail Client on IPad
+    - [x] Mail Client on Android Phone
+    - [x] Mail Client on Android Tablet
+    - [x] Thunderbird
+    - [x] Firefox
+    - [x] Google Chrome
+    - [x] Opera
+    - [x] Microsoft Internet Explorer
+    - [x] Microsoft Edge
 
 
 # v0.2.0
