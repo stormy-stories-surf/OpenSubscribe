@@ -129,12 +129,7 @@ in
 Add some subscribers to your database, either by using the php form or by manually executing some sql commands
 
 `
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test1@stormy-stories.surf', 'abc10def', 'fed20cba', true, true, false, false);
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test2@stormy-stories.surf', 'abc11def', 'fed21cba', true, true, false, false);
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test3@stormy-stories.surf', 'abc12def', 'fed22cba', true, false, false, false);
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test4@stormy-stories.surf', 'abc13def', 'fed23cba', false, true, false, false);
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test5@stormy-stories.surf', 'abc14def', 'fed24cba', false, false, false, false);
-INSERT INTO subscriber(id, mailaddress, subscribeID, unsubscribeID, confirmationMailSent, subscribtionConfirmed, unSubscribed, unSubscribedMailSent) VALUES (NULL, 'info+test6@stormy-stories.surf', 'abc15def', 'fed25cba', true, true, false, false);
+TODO
 `
 
 ### Prepare Newsletter
