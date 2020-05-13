@@ -1,0 +1,14 @@
+sudo: required
+dist: trusty
+
+before_install:
+  - echo "before install"
+
+install:
+  - echo "before install"
+
+script:
+  - echo "start build"
+
+after_success:
+  - echo "after_success"
