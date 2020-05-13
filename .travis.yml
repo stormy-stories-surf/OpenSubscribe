@@ -10,7 +10,8 @@ install:
 
 script:
   - echo "start build"
-  - python3 -m unittest python/test/OpenSubscribe_unitTest.py
+  - coverage run -m python/test/OpenSubscribe_unitTest.py
+  - coverage report -m
 
 after_success:
   - echo "after_success"
