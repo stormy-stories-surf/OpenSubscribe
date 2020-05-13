@@ -5,11 +5,12 @@ before_install:
   - echo "before install"
 
 install:
-  - echo "before install"
+  - echo "install build environment"
+  - pip3 install coverage
 
 script:
   - echo "start build"
-  - python3 python/test/OpenSubscribe_unitTest.py
+  - python3 -m unittest python/test/OpenSubscribe_unitTest.py
 
 after_success:
   - echo "after_success"
