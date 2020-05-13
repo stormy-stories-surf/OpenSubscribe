@@ -1,6 +1,8 @@
 # OpenSubscribe
 A python and php implementation of a tooling for handling E-Mail subscribtions / newsletters on your website.
 
+[![Build Status](https://travis-ci.org/stormy-stories-surf/OpenSubscribe.svg?branch=development)](https://travis-ci.org/stormy-stories-surf/OpenSubscribe)
+
 **PROJECT STATUS : IN DEVELOPMENT**
 <br />
 <img src="docs/pictures/UnderConstructionIcon.png" width="15%">
