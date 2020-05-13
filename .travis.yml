@@ -6,7 +6,7 @@ before_install:
 
 install:
   - echo "install build environment"
-  - sudo pip3 install coverage
+  - sudo pip install coverage
 
 script:
   - echo "start build"
