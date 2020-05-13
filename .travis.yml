@@ -8,11 +8,14 @@ before_install:
 install:
   - echo "install build environment"
   - pip3 install coverage
+  - pip3 install mysql-connector-python
+  - pip3 install python-secrets
 
 script:
   - echo "start build"
   - coverage run python/test/OpenSubscribe_unitTest.py
   - coverage report -m
+  - python3 python/OpenSubscribe.py setup
 
 after_success:
   - echo "after_success"
