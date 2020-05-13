@@ -11,7 +11,7 @@ install:
 
 script:
   - echo "start build"
-  - coverage run -m python/test/OpenSubscribe_unitTest.py
+  - coverage run python/test/OpenSubscribe_unitTest.py
   - coverage report -m
 
 after_success:
