@@ -78,7 +78,7 @@
                     <table width="100%" border="0" cellpadding="0" cellspacing="0">
                         <tr>
                             <td style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;" width="30%">
-                                &reg; stormy-stories.surf 2020
+                                &reg; stormy-stories.surf 2022
                                 <br/>
                             </td>
                             <td style="color: #ffffff; font-family: Arial, sans-serif; font-size: 14px;" align="right" width="70%">
