@@ -184,7 +184,6 @@ class OpenSubscribe:
             unsubscribeSqlUser = unsubscribeData["SQL_USER"]
             unsubscribeSqlPW = unsubscribeData["SQL_PASSWORD"]
             upDateClickCounterData = data["UPDATE_CLICK_COUNTER"]
-            upDateClickCounter2Data = data["UPDATE_CLICK_COUNTER2"]
             upDateClickCounterSqlUser = upDateClickCounterData["SQL_USER"]
             upDateClickCounterSqlPW = upDateClickCounterData["SQL_PASSWORD"]
 
