@@ -26,7 +26,8 @@ CREATE TABLE newsletter (
    path text NOT NULL,
    clickCounterID text NOT NULL,
    clickCounter INT,
-   allMailsSent boolean
+   clickCounter2ID text NOT NULL,
+   clickCounter2 INT
 );
 
 /* table which stores which newsletter mails are already send */

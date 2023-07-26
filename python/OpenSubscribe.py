@@ -116,11 +116,12 @@ class Newsletter:
         self.path = path
         self.configFileName = configFileName
         self.clickCounterID = secrets.token_hex(64)
+        self.clickCounter2ID = secrets.token_hex(64)
         self.ID = self.createNewsletterInDatabase()
 
     def createNewsletterInDatabase(self):
-        sqlQuery = "INSERT INTO newsletter (path, clickCounterID, clickCounter, allMailsSent) VALUES (%s, %s, %s, %s)"
-        sqlValues = (self.path, self.clickCounterID, 0, False)
+        sqlQuery = "INSERT INTO newsletter (path, clickCounterID, clickCounter, clickCounter2ID, clickCounter2, allMailsSent) VALUES (%s, %s, %s, %s, %s, %s)"
+        sqlValues = (self.path, self.clickCounterID, 0, self.clickCounter2ID, 0,False)
         sqlWrapper = SQLWrapper(self.configFileName)
         primaryKeyValue = sqlWrapper.insert(sqlQuery, sqlValues)
         print("Successfully created newsletter for path {}.".format(self.path))
@@ -135,9 +136,10 @@ class NewsletterMail:
         self.newsletterID     = sqlResult[1]
         self.path             = sqlResult[2]
         self.clickCounterID   = sqlResult[3]
-        self.subscriberID     = sqlResult[4]
-        self.mailaddress      = sqlResult[5]
-        self.unsubscribeID    = sqlResult[6]
+        self.clickCounter2ID  = sqlResult[4]
+        self.subscriberID     = sqlResult[5]
+        self.mailaddress      = sqlResult[6]
+        self.unsubscribeID    = sqlResult[7]
 
     def toString(self):
         print("-----------------------------")
@@ -146,6 +148,7 @@ class NewsletterMail:
         print("-----------------------------")
         print("path : {}".format(self.path))
         print("clickCounterID : {}".format(self.clickCounterID))
+        print("clickCounter2ID : {}".format(self.clickCounter2ID))
         print("subscriberID : {}".format(self.subscriberID))
         print("mailaddress : {}".format(self.mailaddress))
         print("unsubscribeID : {}".format(self.unsubscribeID))
@@ -181,6 +184,7 @@ class OpenSubscribe:
             unsubscribeSqlUser = unsubscribeData["SQL_USER"]
             unsubscribeSqlPW = unsubscribeData["SQL_PASSWORD"]
             upDateClickCounterData = data["UPDATE_CLICK_COUNTER"]
+            upDateClickCounter2Data = data["UPDATE_CLICK_COUNTER2"]
             upDateClickCounterSqlUser = upDateClickCounterData["SQL_USER"]
             upDateClickCounterSqlPW = upDateClickCounterData["SQL_PASSWORD"]
 
@@ -489,6 +493,7 @@ class OpenSubscribe:
                 "newsletterMail.newsletterID, " \
                 "newsletter.path, " \
                 "newsletter.clickCounterID, " \
+                "newsletter.clickCounter2ID, " \
                 "subscriber.id AS subscriberID, " \
                 "subscriber.mailaddress, " \
                 "subscriber.unsubscribeID " \
@@ -531,6 +536,7 @@ class OpenSubscribe:
             text = text.replace("<TARGET_URL_LEFT>", targetUrlLeft)
             text = text.replace("<TARGET_URL_RIGHT>", targetUrlRight)
             text = text.replace("<CLICK_COUNTER_ID>", str(newsletterMail_.clickCounterID))
+            text = text.replace("<CLICK_COUNTER2_ID>", str(newsletterMail_.clickCounter2ID))
             text = text.replace("<UNSUBSCRIBE_ID>", str(newsletterMail_.unsubscribeID))
 
         with open(htmlFilePath, 'r') as file:
@@ -543,6 +549,7 @@ class OpenSubscribe:
             html = html.replace("<LEFT_IMAGE_FILE_NAME>", leftImageFileName)
             html = html.replace("<RIGHT_IMAGE_FILE_NAME>", rightImageFileName)
             html = html.replace("<CLICK_COUNTER_ID>", str(newsletterMail_.clickCounterID))
+            html = html.replace("<CLICK_COUNTER2_ID>", str(newsletterMail_.clickCounter2ID))
             html = html.replace("<UNSUBSCRIBE_ID>", str(newsletterMail_.unsubscribeID))
 
         # set variables and send mail
